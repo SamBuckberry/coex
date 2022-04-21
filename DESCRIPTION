@@ -1,0 +1,18 @@
+Package: tidycoex
+Title: Tidy and fast implementation of WGCNA
+Version: 0.0.0.9000
+Authors@R: 
+    person("Sam", "Buckberry", , "sam.buckberry@telethonkids.org.au",
+    role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0003-2388-6046"))
+Description: This package is designed to easily run a weighted gene co-expression network analysis.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
+Imports:
+    fastcluster,
+    ggplot2,
+    matrixStats,
+    methods,
+    WGCNA
