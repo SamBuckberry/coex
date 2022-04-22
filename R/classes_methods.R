@@ -46,24 +46,34 @@ setMethod(
 #' An S4 class to represent the data used in a weighted-gene co-expression network analysis.
 #'
 #' @slot exprs A matrix of normalised counts.
-#' @slot phenoData A data.frame with variable names (samples, libraries) as rows, description tags (e.g., unit of measurement) as columns.
-#' @slot powerEstimate A numeric of length one. An estimate of an appropriate soft-thresholding power calculated usingWGCNA::pickSoftThreshold()
-#' @slot fitIndices A data.frame containing the fit indices for scale free topology calculated using WGCNA::pickSoftThreshold().
-#' @slot softPower A numeric of length one. The user-selected soft power to be used for calculating the co-expression adjacency matrix.
-#' @slot networkType A character vector of length one. A network type. Allowed values are (unique abbreviations of) "unsigned", "signed", "signed hybrid", "distance".
-#' @slot adjacencyMat Matrix. A WGCNA adjacency matrix generated with WGCNA::adjacency().
-#' @slot dissTOM Matrix. A topological overlap matrix generated with WGCNA::TOMsimilarity().
+#' @slot phenoData A data.frame with variable names (samples, libraries)
+#' as rows, description tags (e.g., unit of measurement) as columns.
+#' @slot filtered Logical of lenght one. Indicates if data have been filtered.
+#' @slot powerEstimate A numeric of length one. An estimate of an appropriate
+#' soft-thresholding power calculated usingWGCNA::pickSoftThreshold()
+#' @slot fitIndices A data.frame containing the fit indices for scale free
+#' topology calculated using WGCNA::pickSoftThreshold().
+#' @slot softPower A numeric of length one. The user-selected soft power
+#' to be used for calculating the co-expression adjacency matrix.
+#' @slot networkType A character vector of length one. A network type.
+#' Allowed values are (unique abbreviations of) "unsigned", "signed",
+#' "signed hybrid", "distance".
+#' @slot adjacencyMat Matrix. A WGCNA adjacency matrix generated
+#' with WGCNA::adjacency().
+#' @slot dissTOM Matrix. A topological overlap matrix generated
+#' with WGCNA::TOMsimilarity().
 #' @slot geneTree A S4 class hclust object as defined by tidycoex::hclust().
 #'
 setClass(Class = "coexList", slots=list(exprs = "matrix",
-                                                    phenoData = "data.frame",
-                                                    powerEstimate = "numeric",
-                                                    fitIndices = "data.frame",
-                                                    softPower = "numeric",
-                                                    networkType = "character",
-                                                    adjacencyMat = "matrix",
-                                                    dissTOM = "matrix",
-                                                    geneTree = "hclust"))
+                                        phenoData = "data.frame",
+                                        filtered = "logical",
+                                        powerEstimate = "numeric",
+                                        fitIndices = "data.frame",
+                                        softPower = "numeric",
+                                        networkType = "character",
+                                        adjacencyMat = "matrix",
+                                        dissTOM = "matrix",
+                                        geneTree = "hclust"))
 
 #' An S4 class to represent the data used in a weighted-gene co-expression network analysis.
 #'
@@ -81,9 +91,11 @@ setClass(Class = "coexList", slots=list(exprs = "matrix",
 #' cl
 coexList <- function(exprs){
 
-    methods::new(Class = "coexList",
+    cl <- methods::new(Class = "coexList",
                  exprs = exprs)
+    cl@filtered <- FALSE
 
+    return(cl)
 }
 
 setMethod("show",
