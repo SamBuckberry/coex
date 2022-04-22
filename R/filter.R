@@ -1,20 +1,28 @@
 
 #' Check to see how many genes or samples will be filtered for a given threshold
 #'
-#' @description A function to identify samples and genes to be filtered for network construction.
+#' @description A function to identify samples and genes to be filtered for
+#' network construction.
 #'
 #' @param cl An object of class coexList.
-#' @param propGenes The proportion of genes to keep. Will rank and select genes with the highest variance.
+#' @param propGenes The proportion of genes to keep. Will rank and select genes
+#' with the highest variance.
+#' @param ... Arguments passed to `WGCNA::goodSamplesGenes`
 #' @export
+#'
+#' @seealso googSamplesGenes
 #'
 #' @examples
 #' \dontrun{
 #' cl <- coexList(d1)
 #' checkFilter(cl)
 #' }
-checkFilter <- function(cl, propGenes=1){
+checkFilter <- function(cl, propGenes=1, ...){
 
-    good <- WGCNA::goodSamplesGenes(datExpr=t(cl@exprs), verbose = 0)
+    stopifnot("Data have already been filtered with applyFilter()" =
+                  cl@filtered == FALSE)
+
+    good <- WGCNA::goodSamplesGenes(datExpr=t(cl@exprs), verbose = 1, ...)
 
     # Filter genes based in variance
     propGenesCount <- round(propGenes * nrow(cl@exprs))
@@ -48,6 +56,9 @@ checkFilter <- function(cl, propGenes=1){
 #' }
 applyFilter <- function(cl, propGenes=1){
 
+    stopifnot("Data have already been filtered with applyFilter()" =
+                  cl@filtered == FALSE)
+
     good <- WGCNA::goodSamplesGenes(datExpr=t(cl@exprs), verbose = 0)
 
     # Filter genes based in variance
@@ -59,6 +70,9 @@ applyFilter <- function(cl, propGenes=1){
     filterSamples <- good$goodSamples
 
     cl@exprs <- cl@exprs[filterGenes, filterSamples]
+
+    # Record the filtering in object
+    cl@filtered <- TRUE
 
     return(cl)
 }
