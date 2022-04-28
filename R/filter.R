@@ -10,7 +10,7 @@
 #' @param ... Arguments passed to `WGCNA::goodSamplesGenes`
 #' @export
 #'
-#' @seealso googSamplesGenes
+#' @seealso goodSamplesGenes
 #'
 #' @examples
 #' \dontrun{
@@ -20,21 +20,22 @@
 checkFilter <- function(cl, propGenes=1, ...){
 
     stopifnot("Data have already been filtered with applyFilter()" =
-                  cl@filtered == FALSE)
+                  cl@isFiltered == FALSE)
 
-    good <- WGCNA::goodSamplesGenes(datExpr=t(cl@exprs), verbose = 1, ...)
+    good <- WGCNA::goodSamplesGenes(datExpr=t(cl@normCounts),
+                                    verbose = 1, ...)
 
     # Filter genes based in variance
-    propGenesCount <- round(propGenes * nrow(cl@exprs))
-    vars <- matrixStats::rowVars(cl@exprs)
+    propGenesCount <- round(propGenes * nrow(cl@normCounts))
+    vars <- matrixStats::rowVars(cl@normCounts)
     varKeep <- rank(-vars) <= propGenesCount
 
     filterGenes <- (good$goodGenes == TRUE) & (varKeep == TRUE)
     filterSamples <- good$goodSamples
 
-    message(paste0("Genes pre-filter: ", nrow(cl@exprs)))
+    message(paste0("Genes pre-filter: ", nrow(cl@normCounts)))
     message(paste0("Genes post-filter: ", sum(filterGenes)))
-    message(paste0("Samples pre-filter: ", ncol(cl@exprs)))
+    message(paste0("Samples pre-filter: ", ncol(cl@normCounts)))
     message(paste0("Samples post-filter: ", sum(filterSamples)))
 
 }
@@ -57,22 +58,22 @@ checkFilter <- function(cl, propGenes=1, ...){
 applyFilter <- function(cl, propGenes=1){
 
     stopifnot("Data have already been filtered with applyFilter()" =
-                  cl@filtered == FALSE)
+                  cl@isFiltered == FALSE)
 
-    good <- WGCNA::goodSamplesGenes(datExpr=t(cl@exprs), verbose = 0)
+    good <- WGCNA::goodSamplesGenes(datExpr=t(cl@normCounts), verbose = 0)
 
     # Filter genes based in variance
-    propGenesCount <- round(propGenes * nrow(cl@exprs))
-    vars <- matrixStats::rowVars(cl@exprs)
+    propGenesCount <- round(propGenes * nrow(cl@normCounts))
+    vars <- matrixStats::rowVars(cl@normCounts)
     varKeep <- rank(-vars) <= propGenesCount
 
     filterGenes <- (good$goodGenes == TRUE) & (varKeep == TRUE)
     filterSamples <- good$goodSamples
 
-    cl@exprs <- cl@exprs[filterGenes, filterSamples]
+    cl@normCounts <- cl@normCounts[filterGenes, filterSamples]
 
     # Record the filtering in object
-    cl@filtered <- TRUE
+    cl@isFiltered <- TRUE
 
     return(cl)
 }
