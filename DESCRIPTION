@@ -17,4 +17,5 @@ Imports:
     matrixStats,
     methods,
     rlang,
+    SummarizedExperiment,
     WGCNA
