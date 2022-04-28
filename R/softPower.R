@@ -16,7 +16,7 @@
 #' nsamples <- 16
 #' edat <- matrix(rnorm(ngenes*nsamples,mean=5,sd=2),ngenes,nsamples)
 #' rownames(edat) <- 1:ngenes
-#' cl <- coexList(exprs = edat)
+#' cl <- coexList(counts = edat)
 #' cl <- calcSoftPower(cl)
 #' cl@powerEstimate
 #' head(cl@fitIndices)
@@ -39,7 +39,7 @@ calcSoftPower <- function(cl, RsquaredCut = 0.85, ...){
     powers <- c(c(1:10), seq(from = 12, to=20, by=2))
 
     # Call the network topology analysis function
-    sft <- WGCNA::pickSoftThreshold(t(cl@exprs),
+    sft <- WGCNA::pickSoftThreshold(t(cl@normCounts),
                                               RsquaredCut = RsquaredCut,
                                               powerVector=powers,
                                               verbose=1, ...)
@@ -71,7 +71,7 @@ calcSoftPower <- function(cl, RsquaredCut = 0.85, ...){
 #' nsamples <- 16
 #' edat <- matrix(rnorm(ngenes*nsamples,mean=5,sd=2),ngenes,nsamples)
 #' rownames(edat) <- 1:ngenes
-#' cl <- coexList(exprs = edat)
+#' cl <- coexList(counts = edat)
 #' cl <- calcSoftPower(cl)
 #' plotSoftPower(cl)
 #'
