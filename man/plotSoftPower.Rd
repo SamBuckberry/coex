@@ -24,7 +24,7 @@ ngenes <- 1000
 nsamples <- 16
 edat <- matrix(rnorm(ngenes*nsamples,mean=5,sd=2),ngenes,nsamples)
 rownames(edat) <- 1:ngenes
-cl <- coexList(exprs = edat)
+cl <- coexList(counts = edat)
 cl <- calcSoftPower(cl)
 plotSoftPower(cl)
 

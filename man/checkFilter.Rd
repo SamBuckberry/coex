@@ -25,5 +25,5 @@ checkFilter(cl)
 }
 }
 \seealso{
-googSamplesGenes
+goodSamplesGenes
 }
