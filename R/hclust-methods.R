@@ -1,5 +1,9 @@
 
-# Enable the conversion of S4 hclust to S3 hclust
+#' Convert a S4 hclust to S3 hclust
+#'
+#' @param object A S4 hclust object
+#' @return An S3 hclust object
+#'
 #' @export
 setMethod(
     "as.S3hclust",
