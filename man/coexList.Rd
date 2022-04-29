@@ -2,24 +2,26 @@
 % Please edit documentation in R/coexList-methods.R
 \name{coexList}
 \alias{coexList}
-\title{An S4 class to represent the data used in a weighted-gene co-expression network analysis.}
+\title{An S4 class object to represent the data used in a weighted-gene co-expression network analysis.}
 \usage{
 coexList(counts, ...)
 }
 \arguments{
 \item{counts}{A matrix of gene expression data.}
+
+\item{...}{Parameters for SummarizedExperiment.}
 }
 \value{
 A coexList class object.
 }
 \description{
-An S4 class to represent the data used in a weighted-gene co-expression network analysis.
+An S4 class object to represent the data used in a weighted-gene co-expression network analysis.
 }
 \examples{
 ngenes <- 1000
 nsamples <- 16
 edat <- matrix(rnorm(ngenes*nsamples,mean=5,sd=2),ngenes,nsamples)
 rownames(edat) <- 1:ngenes
-cl <- coexList(exprs = edat)
-cl
+coexList(counts = edat)
+
 }

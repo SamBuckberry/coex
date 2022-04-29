@@ -29,8 +29,6 @@ rownames(edat) <- 1:ngenes
 cl <- coexList(counts = edat)
 cl <- calcSoftPower(cl)
 cl@powerEstimate
-head(cl@fitIndices)
-
 }
 \seealso{
 WGCNA::pickSoftThreshold
