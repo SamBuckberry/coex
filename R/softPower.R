@@ -9,6 +9,8 @@
 #' @param ... Arguments passed to `WGCNA:::pickSoftThreshold()`
 #' @return A coexList class object.
 #'
+#' @import SummarizedExperiment
+#'
 #' @export
 #'
 #' @examples
@@ -19,8 +21,6 @@
 #' cl <- coexList(counts = edat)
 #' cl <- calcSoftPower(cl)
 #' cl@powerEstimate
-#' head(cl@fitIndices)
-#'
 #' @seealso WGCNA::pickSoftThreshold
 
 calcSoftPower <- function(cl, RsquaredCut = 0.85, ...){
@@ -39,7 +39,7 @@ calcSoftPower <- function(cl, RsquaredCut = 0.85, ...){
     powers <- c(c(1:10), seq(from = 12, to=20, by=2))
 
     # Call the network topology analysis function
-    sft <- WGCNA::pickSoftThreshold(t(cl@normCounts),
+    sft <- WGCNA::pickSoftThreshold(t(SummarizedExperiment::assay(cl)),
                                               RsquaredCut = RsquaredCut,
                                               powerVector=powers,
                                               verbose=1, ...)
@@ -49,7 +49,7 @@ calcSoftPower <- function(cl, RsquaredCut = 0.85, ...){
 
     message(paste0("Estimated soft power for network construction: ",
                    cl@powerEstimate))
-    message("Run plotSoftPower() to inspect results.")
+    message("Run plotSoftPower to inspect results.")
 
     return(cl)
 }
