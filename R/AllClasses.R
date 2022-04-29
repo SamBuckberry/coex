@@ -19,8 +19,6 @@
 #' An S4 class to represent the data used in a weighted-gene co-expression network analysis.
 #'
 #' @slot normCounts A matrix of normalised counts.
-#' @slot phenoData A data.frame with variable names (samples, libraries)
-#' as rows, description tags (e.g., unit of measurement) as columns.
 #' @slot isFiltered Logical of length one. Indicates if data have been filtered on variance.
 #' @slot powerEstimate A numeric of length one. An estimate of an appropriate
 #' soft-thresholding power calculated usingWGCNA::pickSoftThreshold()
@@ -40,8 +38,8 @@
 #' @export
 #' @import methods
 #' @importClassesFrom SummarizedExperiment SummarizedExperiment
-#'
 .coexList <- setClass(Class = "coexList",
+                      contains="SummarizedExperiment",
                       slots=representation(
                           normCounts = "matrix",
                           isFiltered = "logical",
@@ -53,5 +51,4 @@
                           dissTOM = "matrix",
                           geneTree = "hclust"
                           ),
-                      contains="SummarizedExperiment"
                       )
