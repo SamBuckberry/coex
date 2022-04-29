@@ -1,3 +1,9 @@
+
+#' Convert a S4 hclust to S3 hclust
+#'
+#' @param object An S4 hclust object
+#' @return An S3 hclust object
+#'
 #' @export
 setGeneric(
     "as.S3hclust",
@@ -6,14 +12,3 @@ setGeneric(
         standardGeneric("as.S3hclust")
     }
 )
-
-## coexList generics
-
-#' @export
-setGeneric("getPowerEstimate", function(x, ...) standardGeneric("getPowerEstimate"))
-
-#' @export
-setGeneric("isFiltered", function(x, ...) standardGeneric("isFiltered"))
-
-#' @export
-setGeneric("normCounts<-", function(x, ..., value) standardGeneric("normCounts<-"))
