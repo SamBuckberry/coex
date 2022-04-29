@@ -1,5 +1,5 @@
-Package: tidycoex
-Title: Tidy and fast implementation of WGCNA
+Package: coex
+Title: Simplified methods for co-expression analyses
 Version: 0.0.0.9000
 Authors@R: 
     person("Sam", "Buckberry", , "sam.buckberry@telethonkids.org.au",
