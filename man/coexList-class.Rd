@@ -13,6 +13,10 @@ An S4 class to represent the data used in a weighted-gene co-expression network 
 \describe{
 \item{\code{normCounts}}{A matrix of normalised counts.}
 
+\item{\code{normMethod}}{Character. The normalisation method used.}
+
+\item{\code{scaleMethod}}{Character. The scaling method used.}
+
 \item{\code{isFiltered}}{Logical of length one. Indicates if data have been filtered on variance.}
 
 \item{\code{powerEstimate}}{A numeric of length one. An estimate of an appropriate

@@ -19,6 +19,7 @@ knitr::opts_chunk$set(
 library(coex)
 library(recount)
 library(magrittr)
+library(edgeR)
 ```
 
 Load the recount data for SRP041675
@@ -37,9 +38,7 @@ cl <- coexList(counts = assay(rse_gene))
 Add the gene and sample metadata to the coexList object
 ```{r}
 colData(cl) <- colData(rse_gene)
-rowRanges(cl) <- rowRanges(rse_gene)
-head(width(cl))
-head(rowRanges(cl)$bp_length)
+rowData(cl) <- rowData(rse_gene)
 ```
 
 Normalise the data for co-expression calculations using the CTF method and scale using `asinh()`.
@@ -52,22 +51,28 @@ norm_factors <- calcNormFactors(assay(cl),
 CTF_norm <- sweep(assay(cl), 2, norm_factors, "/")
 CTF_norm <- asinh(CTF_norm)
 
+cl@normCounts <- CTF_norm
+```
 
+Filter the data
+```{r}
+checkFilter(cl, propGenes = 0.25)
+cl <- applyFilter(cl, propGenes = 0.25)
 ```
 
 Calculate soft power thresholds for WGCNA network
 ```{r}
-
+#cl <- calcSoftPower(cl)
 ```
 
 Check what the estimated power is
 ```{r}
-cl@powerEstimate
+#cl@powerEstimate
 ```
 
 Plot soft power estimates
 ```{r}
-plotSoftPower(cl)
+#plotSoftPower(cl)
 ```
 
 Calc adjacency matrix

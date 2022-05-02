@@ -24,9 +24,10 @@ inspect results
 \examples{
 ngenes <- 1000
 nsamples <- 16
-edat <- matrix(rnorm(ngenes*nsamples,mean=5,sd=2),ngenes,nsamples)
+edat <- matrix(rpois(ngenes, lambda=nsamples), nrow=ngenes)
 rownames(edat) <- 1:ngenes
 cl <- coexList(counts = edat)
+cl <- normCounts(cl)
 cl <- calcSoftPower(cl)
 cl@powerEstimate
 }
