@@ -12,11 +12,14 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 Imports:
     cowplot,
+    edgeR,
     fastcluster,
     ggplot2,
+    magrittr,
     matrixStats,
     methods,
     minet,
+    recount,
     rlang,
     SummarizedExperiment,
     WGCNA
