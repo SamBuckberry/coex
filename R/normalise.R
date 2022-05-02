@@ -26,7 +26,7 @@ normCounts <- function(cl){
     dat_norm <- asinh(dat_norm)
 
     # Add normalised data to object
-    cl@normCounts <- dat_norm
+    cl@normCounts <- as.matrix(dat_norm)
 
     cl@normMethod <- "CTF"
     cl@scaleMethod <- "asinh"
