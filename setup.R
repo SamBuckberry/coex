@@ -3,6 +3,9 @@ load_all()
 
 # Packages used by tidycoex
 usethis::use_package("WGCNA")
+usethis::use_package("edgeR")
+usethis::use_package("recount")
+usethis::use_package("magrittr")
 usethis::use_package("minet")
 usethis::use_package("fastcluster")
 usethis::use_package("matrixStats")
