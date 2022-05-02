@@ -39,10 +39,10 @@ calcSoftPower <- function(cl, RsquaredCut = 0.85, ...){
     powers <- c(c(1:10), seq(from = 12, to=20, by=2))
 
     # Call the network topology analysis function
-    sft <- WGCNA::pickSoftThreshold(t(SummarizedExperiment::assay(cl)),
-                                              RsquaredCut = RsquaredCut,
-                                              powerVector=powers,
-                                              verbose=1, ...)
+    sft <- WGCNA::pickSoftThreshold(t(cl@normCounts),
+                                    RsquaredCut = RsquaredCut,
+                                    powerVector=powers,
+                                    verbose=1, ...)
 
     cl@fitIndices <- sft$fitIndices
     cl@powerEstimate <- sft$powerEstimate
