@@ -1,6 +1,6 @@
-^tidycoex\.Rproj$
+^coex\.Rproj$
 ^\.Rproj\.user$
-^tidycoex\README.md
+^coex\README.md
 ^LICENSE\.md$
 ^setup.R$
 ^setup\.R$
