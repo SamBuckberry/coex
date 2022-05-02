@@ -41,10 +41,13 @@ A wrapper function for constructing a co-expression matrix
 \examples{
 ngenes <- 1000
 nsamples <- 16
-edat <- matrix(rnorm(ngenes*nsamples,mean=5,sd=2),ngenes,nsamples)
-rownames(edat) <- 1:ngenes
+edat <- matrix(rpois(ngenes*nsamples, lambda=5), nrow=ngenes)
+rownames(edat) <- paste0("gene_", 1:ngenes)
 cl <- coexList(counts = edat)
-cl <- calcSoftPower(cl)
-cl <- calcAdjacency(cl)
+cl <- normCounts(cl)
+cl <- calcAdjacency(cl, softPower=6)
+# To view adjacency matrix
 cl@adjacencyMat[1:6, 1:6]
+# To view topological overlap matrix
+cl@dissTOM[1:6, 1:6]
 }

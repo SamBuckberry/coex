@@ -24,8 +24,8 @@ inspect results
 \examples{
 ngenes <- 1000
 nsamples <- 16
-edat <- matrix(rpois(ngenes, lambda=nsamples), nrow=ngenes)
-rownames(edat) <- 1:ngenes
+edat <- matrix(rpois(ngenes*nsamples, lambda=5), nrow=ngenes)
+rownames(edat) <- paste0("gene_", 1:ngenes)
 cl <- coexList(counts = edat)
 cl <- normCounts(cl)
 cl <- calcSoftPower(cl)
