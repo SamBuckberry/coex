@@ -19,12 +19,15 @@
 #' @examples
 #' ngenes <- 1000
 #' nsamples <- 16
-#' edat <- matrix(rnorm(ngenes*nsamples,mean=5,sd=2),ngenes,nsamples)
-#' rownames(edat) <- 1:ngenes
+#' edat <- matrix(rpois(ngenes*nsamples, lambda=5), nrow=ngenes)
+#' rownames(edat) <- paste0("gene_", 1:ngenes)
 #' cl <- coexList(counts = edat)
-#' cl <- calcSoftPower(cl)
-#' cl <- calcAdjacency(cl)
+#' cl <- normCounts(cl)
+#' cl <- calcAdjacency(cl, softPower=6)
+#' # To view adjacency matrix
 #' cl@adjacencyMat[1:6, 1:6]
+#' # To view topological overlap matrix
+#' cl@dissTOM[1:6, 1:6]
 
 calcAdjacency <- function(cl, method = "wgcna",
                           softPower=cl@powerEstimate, TOM=TRUE,
@@ -47,15 +50,16 @@ calcAdjacency <- function(cl, method = "wgcna",
     ### calculate adjacency matrix
     if (method == "wgcna"){
         cat("=== Running WGCNA::adjacency ===\n")
-        cl@adjacencyMat <- WGCNA::adjacency(datExpr = t(SummarizedExperiment::assay(cl)),
-                                            corOptions = list(use = 'p', method = corFun),
+        cl@adjacencyMat <- WGCNA::adjacency(datExpr = t(cl@normCounts),
+                                            corOptions = list(use = 'p',
+                                                              method = corFun),
                                             power=softPower,
                                             type=networkType)
         diag(cl@adjacencyMat) <- 0
 
     } else if (method == "clr"){
         cat("=== Running minet::clr ===\n")
-        cl@adjacencyMat <- minet::minet(dataset = t(SummarizedExperiment::assay(cl)),
+        cl@adjacencyMat <- minet::minet(dataset = t(cl@normCounts),
                                         estimator = corFun, method = "clr")
     }
 
