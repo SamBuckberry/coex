@@ -1,6 +1,7 @@
 ---
 title: "coex - An R package for straightforward co-expression analyses"
-output: rmarkdown::html_vignette
+output: BiocStyle::html_document
+#output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{my-vignette}
   %\VignetteEngine{knitr::rmarkdown}
@@ -16,40 +17,77 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(coex)
+library(recount)
+library(magrittr)
 ```
 
-Create a testing matrix of values
+Load the recount data for SRP041675
 ```{r}
-ngenes <- 1000
-nsamples <- 16
-edat <- matrix(rnorm(ngenes*nsamples,mean=5,sd=2),ngenes,nsamples)
-rownames(edat) <- 1:ngenes
+project_info <- recount::download_study("SRP041675", download = FALSE)
+load(file = url(project_info))
+assay(rse_gene)[1:6, 1:3]
+colData(rse_gene)$title %>% table()
 ```
 
 Load the gene expression counts into a coexList object
 ```{r}
-cl <- coexList(counts = edat)
-cl
+cl <- coexList(counts = assay(rse_gene))
 ```
 
-Normalise the data
+Add the gene and sample metadata to the coexList object
 ```{r}
+colData(cl) <- colData(rse_gene)
+rowRanges(cl) <- rowRanges(rse_gene)
+head(width(cl))
+head(rowRanges(cl)$bp_length)
+```
+
+Normalise the data for co-expression calculations using the CTF method and scale using `asinh()`.
+https://github.com/krishnanlab/RNAseq_coexpression/blob/main/src/CTF_normalize.R
+```{r}
+norm_factors <- calcNormFactors(assay(cl),
+                                lib.size = colSums(assay(cl)),
+                                method = "TMM")
+
+CTF_norm <- sweep(assay(cl), 2, norm_factors, "/")
+CTF_norm <- asinh(CTF_norm)
+
 
 ```
 
 Calculate soft power thresholds for WGCNA network
 ```{r}
-cl <- calcSoftPower(cl)
+
 ```
 
 Check what the estimated power is
 ```{r}
 cl@powerEstimate
 ```
+
 Plot soft power estimates
 ```{r}
 plotSoftPower(cl)
 ```
 
+Calc adjacency matrix
+```{r}
+
+```
+
+Calculate topological overlap and cluster
+```{r}
+
+```
+
+Plot the clustering and modules
+```{r}
+
+```
+
+Plot the modules for groups
+```{r}
+
+```
 
 
