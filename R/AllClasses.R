@@ -19,6 +19,8 @@
 #' An S4 class to represent the data used in a weighted-gene co-expression network analysis.
 #'
 #' @slot normCounts A matrix of normalised counts.
+#' @slot normMethod Character. The normalisation method used.
+#' @slot scaleMethod Character. The scaling method used.
 #' @slot isFiltered Logical of length one. Indicates if data have been filtered on variance.
 #' @slot powerEstimate A numeric of length one. An estimate of an appropriate
 #' soft-thresholding power calculated usingWGCNA::pickSoftThreshold()
@@ -42,6 +44,8 @@
                       contains="SummarizedExperiment",
                       slots=representation(
                           normCounts = "matrix",
+                          normMethod = "character",
+                          scaleMethod = "character",
                           isFiltered = "logical",
                           powerEstimate = "numeric",
                           fitIndices = "data.frame",
