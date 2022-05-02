@@ -33,10 +33,10 @@ checkFilter <- function(cl, propGenes=1, ...){
     filterGenes <- (good$goodGenes == TRUE) & (varKeep == TRUE)
     filterSamples <- good$goodSamples
 
-    message(paste0("Genes pre-filter: ", nrow(cl@normCounts)))
-    message(paste0("Genes post-filter: ", sum(filterGenes)))
-    message(paste0("Samples pre-filter: ", ncol(cl@normCounts)))
-    message(paste0("Samples post-filter: ", sum(filterSamples)))
+    cat(paste0("Genes pre-filter: ", nrow(cl@normCounts), "\n"))
+    cat(paste0("Genes post-filter: ", sum(filterGenes), "\n"))
+    cat(paste0("Samples pre-filter: ", ncol(cl@normCounts), "\n"))
+    cat(paste0("Samples post-filter: ", sum(filterSamples), "\n"))
 
 }
 
