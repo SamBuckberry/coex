@@ -1,5 +1,6 @@
 ---
-title: "coex - An R package for straightforward co-expression analyses"
+title: "coex"
+subtitle: "An R package for straightforward co-expression analyses"
 output: BiocStyle::html_document
 #output: rmarkdown::html_vignette
 vignette: >
@@ -15,24 +16,36 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup, eval=FALSE}
+```{r setup}
 library(coex)
 library(SummarizedExperiment)
 library(magrittr)
 library(edgeR)
-library(easierData)
-library(ExperimentHub)
+library(recount)
+#library(easierData)
+#library(ExperimentHub)
 ```
+
+```{r}
+file_url <- download_study('SRP041675', type = "rse-gene", download = FALSE)
+
+# Load the data
+load(file = url(file_url))
+rse_gene
+```
+
 
 Load the recount data for SRP041675
 ```{r, eval=FALSE}
-eh <- ExperimentHub()
+eh <- ExperimentHub::ExperimentHub()
 list_easierData()
 mariathasan_dat <- eh[["EH6677"]]
 #mariathasan_dat %>% assay() %>% head()
 #mariathasan_dat %>% colData()
 #library(curatedAdipoRNA)
 #data("eas   ")
+
+
 ```
 
 Subset for data from Illumina HiSeq platform
