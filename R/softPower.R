@@ -48,9 +48,9 @@ calcSoftPower <- function(cl, RsquaredCut = 0.85, ...){
     cl@fitIndices <- sft$fitIndices
     cl@powerEstimate <- sft$powerEstimate
 
-    message(paste0("Estimated soft power for network construction: ",
+    cat(paste0("Estimated soft power for network construction: ",
                    cl@powerEstimate))
-    message("Run plotSoftPower to inspect results.")
+    cat("Run plotSoftPower to inspect results.")
 
     return(cl)
 }
