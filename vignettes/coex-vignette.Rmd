@@ -18,14 +18,11 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(coex)
-library(SummarizedExperiment)
 library(magrittr)
-library(edgeR)
 library(recount)
-#library(easierData)
-#library(ExperimentHub)
 ```
 
+Load data from SRP041675 as a RangedSummarizedExperiment. This loads an object named `rse_gene`.
 ```{r}
 file_url <- download_study('SRP041675', type = "rse-gene", download = FALSE)
 
@@ -34,53 +31,46 @@ load(file = url(file_url))
 rse_gene
 ```
 
-
-Load the recount data for SRP041675
 ```{r, eval=FALSE}
-eh <- ExperimentHub::ExperimentHub()
-list_easierData()
-mariathasan_dat <- eh[["EH6677"]]
-#mariathasan_dat %>% assay() %>% head()
-#mariathasan_dat %>% colData()
-#library(curatedAdipoRNA)
-#data("eas   ")
-
-
-```
-
-Subset for data from Illumina HiSeq platform
-```{r, eval=FALSE}
-adipo_counts <- adipo_counts[ ,grepl(pattern = "Illumina HiSeq",
-                                     x = adipo_counts@colData$instrument_model)]
+load("~/Desktop/rse-gene.Rdata")
 ```
 
 Load the gene expression counts into a coexList object
-```{r, eval=FALSE}
-cl <- coexList(counts = assay(mariathasan_dat))
+```{r}
+cl <- coexList(counts = assay(rse_gene))
 ```
 
 Add the gene and sample metadata to the coexList object
-```{r, eval=FALSE}
-colData(cl) <- colData(mariathasan_dat)
-rowData(cl) <- rowData(mariathasan_dat)
+```{r}
+colData(cl) <- colData(rse_gene)
+rowData(cl) <- rowData(rse_gene)
+```
+
+Now we can remove the `rse_gene` object
+```{r}
+rm(rse_gene)
 ```
 
 Normalise the data for co-expression calculations using the CTF method and scale using `asinh()`.
 https://github.com/krishnanlab/RNAseq_coexpression/blob/main/src/CTF_normalize.R
-```{r, eval=FALSE}
+```{r}
 cl <- normCounts(cl)
 ```
 
+Some sample clustering to identify outliers
+
+
 Filter the data
-```{r, eval=FALSE}
-checkFilter(cl, propGenes = 0.25)
-cl <- applyFilter(cl, propGenes = 0.25)
+```{r}
+checkFilter(cl, propGenes = 0.1)
+cl <- applyFilter(cl, propGenes = 0.1)
 ```
 
 Calculate soft power thresholds for WGCNA network
 ```{r, eval=FALSE}
 cl <- calcSoftPower(cl)
 ```
+
 Check what the estimated power is
 ```{r, eval=FALSE}
 cl@powerEstimate
@@ -88,28 +78,28 @@ cl@powerEstimate
 
 Plot soft power estimates
 ```{r, eval=FALSE}
-plotSoftPower(cl)
+plotSoftPower(cl, eval=FALSE)
 ```
 
 Calc adjacency matrix
 ```{r, eval=FALSE}
-cl <- calcAdjacency(cl, method = "wgcna", softPower = 10)
+cl <- calcAdjacency(cl, method = "wgcna", softPower = 5)
 ```
 
-Calculate topological overlap and cluster
+Calculate topological overlap matrix (TOM)
 ```{r, eval=FALSE}
-cl <- calcTOM(cl, )
+cl <- calcTOM(cl)
 ```
-
-Cluster 
+Cluster genes
 ```{r, eval=FALSE}
-
+cl <- calcTree(cl)
 ```
 
 Plot clustering
 ```{r, eval=FALSE}
-
+plotTree(cl, pamStage=TRUE)
 ```
+
 
 Plot the modules for groups
 ```{r, eval=FALSE}

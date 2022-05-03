@@ -8,29 +8,28 @@ calcAdjacency(
   cl,
   method = "wgcna",
   softPower = cl@powerEstimate,
-  TOM = TRUE,
   networkType = "signed",
-  corFun = "pearson"
+  corFun = "pearson",
+  ...
 )
 }
 \arguments{
 \item{cl}{An object of class coexList.}
 
 \item{method}{Character. The method to construct matrix.
-Current options are 'wgcna', clr'.}
+Current options are 'wgcna', clr'. For 'wgcna', the function used is WGCNA::adjacency.
+For 'clr', the functio used is}
 
 \item{softPower}{Integer. The soft thresholding power used to construct the
 WGCNA network. This can be determined using the determineSoftPowerWGCNA function.}
 
-\item{TOM}{Logical. Calculate Topological overlap matrix for clustering?
-Default = TRUE}
+\item{networkType}{character. The type of WGCNA network. Default is 'signed'.
+See ?WGCNA::adjacency for options.}
 
-\item{networkType}{A character vector of length one. A network type.
-Allowed values are (unique abbreviations of) "unsigned", "signed",
-"signed hybrid", "distance"}
+\item{corFun}{character. The correlation method used.
+Options are "pearson" or "spearman".}
 
-\item{corFun}{Character. The correlation function to be used.
-Can be one of pearson (default), or spearman.}
+\item{...}{Paramaters passed to adjacency function defined in method.}
 }
 \value{
 A coexList object.
@@ -48,6 +47,4 @@ cl <- normCounts(cl)
 cl <- calcAdjacency(cl, softPower=6)
 # To view adjacency matrix
 cl@adjacencyMat[1:6, 1:6]
-# To view topological overlap matrix
-cl@dissTOM[1:6, 1:6]
 }
