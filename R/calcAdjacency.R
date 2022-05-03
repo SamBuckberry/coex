@@ -2,16 +2,15 @@
 #' Calculate an adjacency matrix
 #' @param cl An object of class coexList.
 #' @param method Character. The method to construct matrix.
-#' Current options are 'wgcna', clr'.
+#' Current options are 'wgcna', clr'. For 'wgcna', the function used is WGCNA::adjacency.
+#' For 'clr', the functio used is
+#' @param networkType character. The type of WGCNA network. Default is 'signed'.
+#' See ?WGCNA::adjacency for options.
+#' @param corFun character. The correlation method used.
+#' Options are "pearson" or "spearman".
 #' @param softPower Integer. The soft thresholding power used to construct the
 #' WGCNA network. This can be determined using the determineSoftPowerWGCNA function.
-#' @param TOM Logical. Calculate Topological overlap matrix for clustering?
-#' Default = TRUE
-#' @param networkType A character vector of length one. A network type.
-#' Allowed values are (unique abbreviations of) "unsigned", "signed",
-#' "signed hybrid", "distance"
-#' @param corFun Character. The correlation function to be used.
-#' Can be one of pearson (default), or spearman.
+#' @param ... Paramaters passed to adjacency function defined in method.
 #' @return A coexList object.
 #'
 #' @description A wrapper function for constructing a co-expression matrix
@@ -26,12 +25,10 @@
 #' cl <- calcAdjacency(cl, softPower=6)
 #' # To view adjacency matrix
 #' cl@adjacencyMat[1:6, 1:6]
-#' # To view topological overlap matrix
-#' cl@dissTOM[1:6, 1:6]
 
 calcAdjacency <- function(cl, method = "wgcna",
-                          softPower=cl@powerEstimate, TOM=TRUE,
-                          networkType="signed", corFun="pearson"){
+                          softPower=cl@powerEstimate,
+                          networkType="signed", corFun="pearson", ...){
 
     # Check inputs
     stopifnot("method must be a character of length 1. Choose one of 'wgcna', 'clr'" =
@@ -45,32 +42,34 @@ calcAdjacency <- function(cl, method = "wgcna",
 
     options(stringsAsFactors = FALSE)
 
-    msg <- NULL
+    # Clear the adjcencyMat slot
+    cl@adjacencyMat <- matrix(0,0,0)
 
     ### calculate adjacency matrix
+    calc_start <- Sys.time()
+    gc()
     if (method == "wgcna"){
         cat("=== Running WGCNA::adjacency ===\n")
+        cat("...This may take a while...\n")
         cl@adjacencyMat <- WGCNA::adjacency(datExpr = t(cl@normCounts),
-                                            corOptions = list(use = 'p',
-                                                              method = corFun),
-                                            power=softPower,
-                                            type=networkType)
+                                            corFnc = WGCNA::cor,
+                                            type = networkType,
+                                            power=softPower, ...)
         diag(cl@adjacencyMat) <- 0
 
     } else if (method == "clr"){
         cat("=== Running minet::clr ===\n")
+        cat("...This may take a while...\n")
         cl@adjacencyMat <- minet::minet(dataset = t(cl@normCounts),
-                                        estimator = corFun, method = "clr")
+                                        estimator = "pearson",
+                                        method = "clr", ...)
     }
 
-    #### Calculation of the topological overlap matrix
-    if (TOM == TRUE){
-        cat("=== Running WGCNA::TOMsimilarity ===\n")
-        cl@dissTOM <- 1 - WGCNA::TOMsimilarity(cl@adjacencyMat,
-                                               TOMType=networkType)
-    }
+    calc_end <- Sys.time() - calc_start
+    cat(paste0("Elapsed time: ",
+               round(as.numeric(calc_end), digits = 2),
+               " ", units(calc_end), "\n"))
 
-    cat("=== Done! ===")
     return(cl)
 }
 
