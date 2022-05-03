@@ -4,3 +4,4 @@
 ^LICENSE\.md$
 ^setup.R$
 ^setup\.R$
+^data-raw$
