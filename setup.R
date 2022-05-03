@@ -14,7 +14,7 @@ usethis::use_package("ggplot2")
 usethis::use_package("SummarizedExperiment")
 usethis::use_testthat()
 #usethis::use_vignette("my-vignette")
-usethis::use_data_raw()
+
 # Files to ignore
 usethis::use_build_ignore("setup.R")
 
