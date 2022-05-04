@@ -24,7 +24,7 @@
 plotPCA <- function(cl, groupVar="", x_pc=1, y_pc=2, scale=TRUE){
 
     # Remove incomplete cases
-    mat <- cl@normCounts[complete.cases(cl@normCounts), ]
+    mat <- cl@normCounts[stats::complete.cases(cl@normCounts), ]
 
     # Transpose
     mat <- t(mat)
@@ -36,9 +36,9 @@ plotPCA <- function(cl, groupVar="", x_pc=1, y_pc=2, scale=TRUE){
     mat <- mat[ ,!lowVar$nzv]
 
     # Calculate PC's
-    pr <- prcomp(x = mat, scale.=scale)
-    pc1 <- (summary(pr)$importance[2, x_pc] * 100) %>% round(digits = 1)
-    pc2 <- (summary(pr)$importance[2, y_pc] * 100) %>% round(digits = 1)
+    pr <- stats::prcomp(x = mat, scale.=scale)
+    pc1 <- round((summary(pr)$importance[2, x_pc] * 100),digits = 1)
+    pc2 <- round((summary(pr)$importance[2, y_pc] * 100),digits = 1)
 
     pc1_dat <- pr$x[ ,x_pc]
     pc2_dat <- pr$x[ ,y_pc]
@@ -51,13 +51,14 @@ plotPCA <- function(cl, groupVar="", x_pc=1, y_pc=2, scale=TRUE){
         colnames(pca_df)[4] <- "groupVar"
     }
 
-    gg_pca <-  ggplot(data = pca_df,
-                      mapping = aes(x = x_pc, y = y_pc,
+    gg_pca <-  ggplot2::ggplot(data = pca_df,
+                      mapping = ggplot2::aes(x = x_pc, y = y_pc,
                                     fill=groupVar, colour=groupVar)) +
-        geom_point(alpha=0.8, size=1) +
-        theme_linedraw() +
-        theme(panel.grid = element_line(colour = 'grey')) +
-        xlab(paste0("PC", x_pc, " (", pc2, "%)")) +
-        ylab(paste0("PC", y_pc, " (", pc1, "%)"))
+        ggplot2::geom_point(alpha=0.8, size=1) +
+        ggplot2::theme_linedraw() +
+        ggplot2::theme(panel.grid =
+                           ggplot2::element_line(colour = 'grey')) +
+        ggplot2::xlab(paste0("PC", x_pc, " (", pc2, "%)")) +
+        ggplot2::ylab(paste0("PC", y_pc, " (", pc1, "%)"))
     gg_pca
 }
