@@ -20,6 +20,7 @@ knitr::opts_chunk$set(
 library(coex)
 library(magrittr)
 library(recount)
+library(stringr)
 ```
 
 Load data from SRP041675 as a RangedSummarizedExperiment. This loads an object named `rse_gene`.
@@ -30,6 +31,7 @@ file_url <- download_study('SRP041675', type = "rse-gene", download = FALSE)
 load(file = url(file_url))
 rse_gene
 ```
+
 
 ```{r, eval=FALSE}
 load("~/Desktop/rse-gene.Rdata")
@@ -46,22 +48,77 @@ colData(cl) <- colData(rse_gene)
 rowData(cl) <- rowData(rse_gene)
 ```
 
+Reformat some of the metadata for analysis purposes
+```{r}
+group_df <- colData(cl)$title %>% 
+    stringr::str_split(pattern = "_", n = 3, simplify = TRUE) %>%
+    DataFrame()
+group_df$V3[group_df$V2 == "Fresh"] <- "None"
+group_df$V1 <- colnames(cl)
+colnames(group_df) <- c("Sample", "Timepoint", "Treatment")
+
+colData(cl) <- group_df[ ,c(2:3)]
+rownames(colData(cl)) <- group_df[ ,1]
+```
+
+
 Now we can remove the `rse_gene` object
 ```{r}
 rm(rse_gene)
 ```
 
+
+## Counts filtering
+
+```{r}
+hist(edgeR::cpm(assay(cl), log=TRUE))
+```
+
+```{r}
+keep <- edgeR::filterByExpr(assay(cl))
+hist(edgeR::cpm(assay(cl)[keep, ], log=TRUE))
+
+cl <- cl[keep, ]
+```
+
+
+## Normalisation
+
+The goal of within sample normalisation is...
+
+Count per million normalisation
+```{r}
+cl <- normCounts(cl, normMethod = "CPM")
+```
+
+CTF normalisation as described in... 
+
 Normalise the data for co-expression calculations using the CTF method and scale using `asinh()`.
 https://github.com/krishnanlab/RNAseq_coexpression/blob/main/src/CTF_normalize.R
 ```{r}
-cl <- normCounts(cl)
+cl2 <- normCounts(cl, normMethod = "CTF", scaleMethod = "asinh")
 ```
 
-Some sample clustering to identify outliers
+
+## Clustering
+
+First, lets do some plots to inspect for any batch effects or outlier samples
+
+PCA plot
+```{r, eval=FALSE}
+pca_cpm_treat <- plotPCA(cl, groupVar = "Treatment") + ggtitle("CPM")
+pca_ctf_treat <- plotPCA(cl2, groupVar = "Treatment") + ggtitle("CTF")
+
+pca_cpm_time <- plotPCA(cl, groupVar = "Timepoint") + ggtitle("CPM")
+pca_ctf_time <- plotPCA(cl2, groupVar = "Timepoint") + ggtitle("CTF")
+
+cowplot::plot_grid(pca_cpm_treat, pca_ctf_treat,
+                   pca_cpm_time, pca_ctf_time)
+```
 
 
 Filter the data
-```{r}
+```{r, eval=FALSE}
 checkFilter(cl, propGenes = 0.1)
 cl <- applyFilter(cl, propGenes = 0.1)
 ```
@@ -75,10 +132,9 @@ Check what the estimated power is
 ```{r, eval=FALSE}
 cl@powerEstimate
 ```
-
 Plot soft power estimates
 ```{r, eval=FALSE}
-plotSoftPower(cl, eval=FALSE)
+plotSoftPower(cl)
 ```
 
 Calc adjacency matrix
@@ -99,7 +155,6 @@ Plot clustering
 ```{r, eval=FALSE}
 plotTree(cl, pamStage=TRUE)
 ```
-
 
 Plot the modules for groups
 ```{r, eval=FALSE}
