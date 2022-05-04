@@ -16,6 +16,8 @@ Bioconductor
 ```
 
 ### To do
+- Add stopifnot and unit tests for plotPCA
+
 - Add spqn normalisation methods. See https://bioconductor.org/packages/release/bioc/vignettes/spqn/inst/doc/spqn.html
 
 - Add CPM/TPM normalisation methods
