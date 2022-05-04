@@ -1,0 +1,63 @@
+#' Plot PCA of samples from normalised data
+#'
+#' @param cl An object of class coexList.
+#' @param groupVar Character or numeric that refers to a
+#' column name of colData(cl)
+#' @param x_pc numeric of length 1. What PC to plot on the x-axis
+#' @param y_pc numeric of length 1. What PC to plot on the y-axis
+#' @param scale logical. Should the data be scaled before
+#' calculating principal components? See ?prcomp for more details.
+#' A column name of colData(cl) for point colours.
+#' @return ggplot object
+#' @export
+#'
+#' @examples
+#' ngenes <- 1000
+#' nsamples <- 16
+#' edat <- matrix(rpois(ngenes*nsamples, lambda=5), nrow=ngenes)
+#' rownames(edat) <- paste0("gene_", 1:ngenes)
+#' cl <- coexList(counts = edat)
+#' cl <- normCounts(cl)
+#' plotPCA(cl)
+#'
+
+plotPCA <- function(cl, groupVar="", x_pc=1, y_pc=2, scale=TRUE){
+
+    # Remove incomplete cases
+    mat <- cl@normCounts[complete.cases(cl@normCounts), ]
+
+    # Transpose
+    mat <- t(mat)
+
+    # Remove low variance features
+    cat("Testing for near zero variance features...\n")
+    lowVar <- caret::nearZeroVar(mat, saveMetrics = TRUE)
+    cat(paste0("Low variance features removed = ", sum(lowVar$nzv)))
+    mat <- mat[ ,!lowVar$nzv]
+
+    # Calculate PC's
+    pr <- prcomp(x = mat, scale.=scale)
+    pc1 <- (summary(pr)$importance[2, x_pc] * 100) %>% round(digits = 1)
+    pc2 <- (summary(pr)$importance[2, y_pc] * 100) %>% round(digits = 1)
+
+    pc1_dat <- pr$x[ ,x_pc]
+    pc2_dat <- pr$x[ ,y_pc]
+    samples <- colnames(cl)
+
+    pca_df <- data.frame(Sample=samples, PC1=pc1_dat, PC2=pc2_dat)
+
+    if (groupVar != ""){
+        pca_df <- cbind(pca_df, colData(cl)[ ,groupVar])
+        colnames(pca_df)[4] <- "groupVar"
+    }
+
+    gg_pca <-  ggplot(data = pca_df,
+                      mapping = aes(x = x_pc, y = y_pc,
+                                    fill=groupVar, colour=groupVar)) +
+        geom_point(alpha=0.8, size=1) +
+        theme_linedraw() +
+        theme(panel.grid = element_line(colour = 'grey')) +
+        xlab(paste0("PC", x_pc, " (", pc2, "%)")) +
+        ylab(paste0("PC", y_pc, " (", pc1, "%)"))
+    gg_pca
+}
