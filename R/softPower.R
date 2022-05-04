@@ -49,7 +49,7 @@ calcSoftPower <- function(cl, RsquaredCut = 0.85, ...){
     cl@powerEstimate <- sft$powerEstimate
 
     cat(paste0("Estimated soft power for network construction: ",
-                   cl@powerEstimate))
+                   cl@powerEstimate, "\n"))
     cat("Run plotSoftPower to inspect results.")
 
     return(cl)
