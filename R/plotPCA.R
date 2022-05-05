@@ -42,9 +42,9 @@ plotPCA <- function(cl, groupVar="", x_pc=1, y_pc=2, scale=TRUE){
 
     pc1_dat <- pr$x[ ,x_pc]
     pc2_dat <- pr$x[ ,y_pc]
-    samples <- colnames(cl)
+    #samples <- colnames(cl)
 
-    pca_df <- data.frame(Sample=samples, PC1=pc1_dat, PC2=pc2_dat)
+    pca_df <- data.frame(PC1=pc1_dat, PC2=pc2_dat)
 
     if (groupVar != ""){
         pca_df <- cbind(pca_df, colData(cl)[ ,groupVar])
@@ -52,7 +52,7 @@ plotPCA <- function(cl, groupVar="", x_pc=1, y_pc=2, scale=TRUE){
     }
 
     gg_pca <-  ggplot2::ggplot(data = pca_df,
-                      mapping = ggplot2::aes(x = x_pc, y = y_pc,
+                      mapping = ggplot2::aes(x = .data$PC1, y = .data$PC2,
                                     fill=groupVar, colour=groupVar)) +
         ggplot2::geom_point(alpha=0.8, size=1) +
         ggplot2::theme_linedraw() +
