@@ -1,7 +1,7 @@
 #' Plot PCA of samples from normalised data
 #'
 #' @param cl An object of class coexList.
-#' @param groupVar Character or numeric that refers to a
+#' @param colVar Character or numeric that refers to a
 #' column name of colData(cl)
 #' @param x_pc numeric of length 1. What PC to plot on the x-axis
 #' @param y_pc numeric of length 1. What PC to plot on the y-axis
@@ -21,7 +21,7 @@
 #' plotPCA(cl)
 #'
 
-plotPCA <- function(cl, groupVar="", x_pc=1, y_pc=2, scale=TRUE){
+plotPCA <- function(cl, colVar="", x_pc=1, y_pc=2, scale=TRUE){
 
     # Remove incomplete cases
     mat <- cl@normCounts[stats::complete.cases(cl@normCounts), ]
@@ -47,13 +47,13 @@ plotPCA <- function(cl, groupVar="", x_pc=1, y_pc=2, scale=TRUE){
     pca_df <- data.frame(PC1=pc1_dat, PC2=pc2_dat)
 
     if (groupVar != ""){
-        pca_df <- cbind(pca_df, colData(cl)[ ,groupVar])
-        colnames(pca_df)[4] <- "groupVar"
+        pca_df <- cbind(pca_df, colData(cl)[ ,colVar])
+        colnames(pca_df)[4] <- "colVar"
     }
 
     gg_pca <-  ggplot2::ggplot(data = pca_df,
                       mapping = ggplot2::aes(x = .data$PC1, y = .data$PC2,
-                                    fill=groupVar, colour=groupVar)) +
+                                    fill=colVar, colour=colVar)) +
         ggplot2::geom_point(alpha=0.8, size=1) +
         ggplot2::theme_linedraw() +
         ggplot2::theme(panel.grid =
