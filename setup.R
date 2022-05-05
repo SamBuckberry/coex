@@ -6,12 +6,15 @@ usethis::use_package("WGCNA")
 usethis::use_package("edgeR")
 usethis::use_package("recount")
 usethis::use_package("magrittr")
+usethis::use_package("stringr")
 usethis::use_package("minet")
 usethis::use_package("fastcluster")
 usethis::use_package("matrixStats")
 usethis::use_package("methods")
 usethis::use_package("ggplot2")
+usethis::use_package("dynamicTreeCut")
 usethis::use_package("SummarizedExperiment")
+usethis::use_package("caret")
 usethis::use_testthat()
 #usethis::use_vignette("my-vignette")
 
@@ -25,3 +28,5 @@ devtools::check()
 devtools::install()
 
 #######
+
+

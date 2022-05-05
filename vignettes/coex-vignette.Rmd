@@ -25,7 +25,8 @@ library(stringr)
 
 Load data from SRP041675 as a RangedSummarizedExperiment. This loads an object named `rse_gene`.
 ```{r}
-file_url <- download_study('SRP041675', type = "rse-gene", download = FALSE)
+file_url <- download_study('SRP041675', type = "rse-gene",
+                           download = FALSE)
 
 # Load the data
 load(file = url(file_url))
@@ -115,6 +116,73 @@ pca_ctf_time <- plotPCA(cl2, groupVar = "Timepoint") + ggtitle("CTF")
 cowplot::plot_grid(pca_cpm_treat, pca_ctf_treat,
                    pca_cpm_time, pca_ctf_time)
 ```
+
+
+Hierarchical clustering
+```{r}
+plotDendrogram <- function(cl, colVar=1, corMethod="spearman",
+                            hclustMethod="average"){
+ 
+        # Do the clustering
+        cat("Calculating correlations...\n")
+        dissimilarity <- 1 - cor(cl@normCounts, method = corMethod)
+        cat("Clustering...\n")
+        distance <- as.dist(dissimilarity)
+        hc <- hclust(distance, method = hclustMethod)
+        gg1 <- suppressMessages(
+            ggdendro::ggdendrogram(hc, rotate = FALSE, labels = TRUE) +
+            ggplot2::scale_x_discrete(expand=c(0,0)) + 
+            ggplot2::scale_y_continuous(expand = c(0,0)) +
+            ggplot2::theme(axis.text.y = ggplot2::element_text(angle = 0),
+                  plot.margin = ggplot2::unit(c(10,10,0,10), "points"))
+        )
+        
+        # Get the colData for colour bar    
+        get_col_data <- function(x){
+            df <- data.frame(id = rownames(colData(cl)),
+                                    variable = colnames(colData(cl))[x],
+                                    value = colData(cl)[ ,x],
+                                    order = hc$order)
+            
+            # Set order of dendrogram
+            df$id <- factor(df$id, levels = hc$labels[hc$order])
+            
+            return(df)
+        }
+        
+        col_dat <- get_col_data(x = colVar)
+
+        # Plot the colour bar
+        gg2 <- ggplot2::ggplot(col_dat, aes(x = .data$id,
+                                   y = .data$variable,
+                                   fill=.data$value)) +
+            ggplot2::geom_tile() + 
+            ggplot2::scale_x_discrete(expand = c(0,0)) +
+            ggplot2::scale_y_discrete(expand=c(0,0)) +
+            ggplot2::scale_fill_viridis_d() +
+            ggplot2::xlab("") +
+            ggplot2::ylab("") +
+            ggplot2::theme(plot.margin = unit(c(0,10,10,10), "points"),
+                  axis.ticks = ggplot2::element_blank(),
+                  axis.text.x = ggplot2::element_blank(),
+                  axis.text.y = element_text(angle = 0),
+                  legend.title = element_blank(),
+                  legend.position="bottom")
+
+        # Assemble the plot
+        cp <- cowplot::plot_grid(gg1, gg2, axis = "l", align = "v",
+                                 nrow = 2,
+                                 rel_heights = c(0.4, 0.2))
+
+        return(cp)
+}
+```
+
+
+```{r}
+plotDendrogram(cl = cl, colVar = 1)
+```
+
 
 
 Filter the data

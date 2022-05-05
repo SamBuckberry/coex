@@ -17,6 +17,7 @@ Bioconductor
 
 ### To do
 - Add stopifnot and unit tests for plotPCA
+    - Check if plotPCA should be a generic like in DEseq2
 
 - Add spqn normalisation methods. See https://bioconductor.org/packages/release/bioc/vignettes/spqn/inst/doc/spqn.html
 
