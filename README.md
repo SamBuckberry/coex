@@ -1,16 +1,14 @@
 # coex: An R package for co-expression network analyses
 
-Correlation networks are have become a common way to analyse gene expression data. In this area,  weighted gene co-expression network analysis (WGCNA) is a popular method for analysing the correlation patterns among genes across samples.
-
-The `coex` R package is a collection of eassy to use R functions for performing co-expression analyses, primarily from RNA-seq data. The package includes functions for normalising RNA-seq count data for co-expression analyses, batch effect detection and correction, network construction, module detection, visualisation, among other features.
+Correlation networks are have become a common way to analyse gene expression data. The `coex` R package is a collection of eassy to use R functions for performing co-expression analyses, primarily from RNA-seq data. The package includes functions for normalising RNA-seq count data for co-expression analyses, batch effect detection and correction, network construction, module detection, visualisation, among other features.
 
 `coex` features include:  
-* An S4 class object designed specifically for co-expression analyses that extends the `SummarizedExperiment` class.
-* Data filtering and normalisation functions for RNA-seq count data
+* S4 object designed for co-expression analyses that extends the [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) class.
+* Data filtering and normalisation functions for RNA-seq data
     * CTF normalisation as implimented in [Johnson & Krishnan 2022](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-021-02568-9)  
-* Optimised wrappers for core `WGCNA` functions  
+* Optimised wrappers for core [WGCNA](https://cran.r-project.org/web/packages/WGCNA/index.html) functions  
 * Function for CLR adjacency calculations as implimented in [Johnson & Krishnan 2022](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-021-02568-9)  
-* Very fast clustering functions derived from the `fastcluster` package  
+* Very fast clustering functions derived from the [fastcluster](https://cran.r-project.org/web/packages/fastcluster/index.html) package  
 * Plotting functions that output ``ggplot2`` objects
 
 ## How to install the `coex` R package
