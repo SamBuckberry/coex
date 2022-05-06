@@ -39,5 +39,8 @@ with WGCNA::adjacency().}
 with WGCNA::TOMsimilarity().}
 
 \item{\code{geneTree}}{A S4 class hclust object as defined by tidycoex::hclust().}
+
+\item{\code{moduleEigengenes}}{A list of module eigengenes data as returned from
+WGCNA::moduleEigengenes}
 }}
 

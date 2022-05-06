@@ -1,10 +1,11 @@
 ---
 title: "coex"
 subtitle: "An R package for straightforward co-expression analyses"
+author: "Sam Buckberry"
 output: BiocStyle::html_document
 #output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{my-vignette}
+  %\VignetteIndexEntry{coex}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -16,13 +17,22 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+# Introduction
+
+# Getting started with `coex`
+
+## Install and load required packages
+
+Load the packages required for this vignette.
+```{r setup, message=FALSE}
 library(coex)
-library(magrittr)
 library(recount)
+library(magrittr)
 library(stringr)
+library(cowplot)
 ```
 
+## Download RNA-seq counts data
 Load data from SRP041675 as a RangedSummarizedExperiment. This loads an object named `rse_gene`.
 ```{r}
 file_url <- download_study('SRP041675', type = "rse-gene",
@@ -38,11 +48,15 @@ rse_gene
 load("~/Desktop/rse-gene.Rdata")
 ```
 
+# Prepare the `coexList` object 
+
+## Load counts data into coexList
 Load the gene expression counts into a coexList object
 ```{r}
 cl <- coexList(counts = assay(rse_gene))
 ```
 
+### Load metadata into coexList 
 Add the gene and sample metadata to the coexList object
 ```{r}
 colData(cl) <- colData(rse_gene)
@@ -62,14 +76,12 @@ colData(cl) <- group_df[ ,c(2:3)]
 rownames(colData(cl)) <- group_df[ ,1]
 ```
 
-
 Now we can remove the `rse_gene` object
 ```{r}
 rm(rse_gene)
 ```
 
-
-## Counts filtering
+# Pre-analysis filtering
 
 ```{r}
 hist(edgeR::cpm(assay(cl), log=TRUE))
@@ -83,7 +95,7 @@ cl <- cl[keep, ]
 ```
 
 
-## Normalisation
+# Normalisation
 
 The goal of within sample normalisation is...
 
@@ -101,7 +113,7 @@ cl2 <- normCounts(cl, normMethod = "CTF", scaleMethod = "asinh")
 ```
 
 
-## Clustering
+# Clustering for quality control
 
 First, lets do some plots to inspect for any batch effects or outlier samples
 
@@ -117,103 +129,51 @@ cowplot::plot_grid(pca_cpm_treat, pca_ctf_treat,
                    pca_cpm_time, pca_ctf_time)
 ```
 
+```{r, eval = FALSE}
+pheatmap::pheatmap(cl@normCounts, kmeans_k = 500, show_rownames = FALSE,
+                         scale = 'row', cluster_rows = TRUE,fontsize_col = 2,
+                         annotation_col = as.data.frame(colData(cl)))
 
-Hierarchical clustering
-```{r}
-plotDendrogram <- function(cl, colVar=1, corMethod="spearman",
-                            hclustMethod="average"){
- 
-        # Do the clustering
-        cat("Calculating correlations...\n")
-        dissimilarity <- 1 - cor(cl@normCounts, method = corMethod)
-        cat("Clustering...\n")
-        distance <- as.dist(dissimilarity)
-        hc <- hclust(distance, method = hclustMethod)
-        gg1 <- suppressMessages(
-            ggdendro::ggdendrogram(hc, rotate = FALSE, labels = TRUE) +
-            ggplot2::scale_x_discrete(expand=c(0,0)) + 
-            ggplot2::scale_y_continuous(expand = c(0,0)) +
-            ggplot2::theme(axis.text.y = ggplot2::element_text(angle = 0),
-                  plot.margin = ggplot2::unit(c(10,10,0,10), "points"))
-        )
-        
-        # Get the colData for colour bar    
-        get_col_data <- function(x){
-            df <- data.frame(id = rownames(colData(cl)),
-                                    variable = colnames(colData(cl))[x],
-                                    value = colData(cl)[ ,x],
-                                    order = hc$order)
-            
-            # Set order of dendrogram
-            df$id <- factor(df$id, levels = hc$labels[hc$order])
-            
-            return(df)
-        }
-        
-        col_dat <- get_col_data(x = colVar)
-
-        # Plot the colour bar
-        gg2 <- ggplot2::ggplot(col_dat, aes(x = .data$id,
-                                   y = .data$variable,
-                                   fill=.data$value)) +
-            ggplot2::geom_tile() + 
-            ggplot2::scale_x_discrete(expand = c(0,0)) +
-            ggplot2::scale_y_discrete(expand=c(0,0)) +
-            ggplot2::scale_fill_viridis_d() +
-            ggplot2::xlab("") +
-            ggplot2::ylab("") +
-            ggplot2::theme(plot.margin = unit(c(0,10,10,10), "points"),
-                  axis.ticks = ggplot2::element_blank(),
-                  axis.text.x = ggplot2::element_blank(),
-                  axis.text.y = element_text(angle = 0),
-                  legend.title = element_blank(),
-                  legend.position="bottom")
-
-        # Assemble the plot
-        cp <- cowplot::plot_grid(gg1, gg2, axis = "l", align = "v",
-                                 nrow = 2,
-                                 rel_heights = c(0.4, 0.2))
-
-        return(cp)
-}
 ```
 
-
-```{r}
-plotDendrogram(cl = cl, colVar = 1)
-```
-
-
+# Variance filtering
 
 Filter the data
 ```{r, eval=FALSE}
-checkFilter(cl, propGenes = 0.1)
-cl <- applyFilter(cl, propGenes = 0.1)
+checkFilter(cl)
+cl <- applyFilter(cl, propGenes = 1)
 ```
 
+# WGCNA analysis
+
+## Soft-power calculations
 Calculate soft power thresholds for WGCNA network
 ```{r, eval=FALSE}
 cl <- calcSoftPower(cl)
 ```
-
 Check what the estimated power is
 ```{r, eval=FALSE}
 cl@powerEstimate
 ```
+
 Plot soft power estimates
 ```{r, eval=FALSE}
 plotSoftPower(cl)
 ```
 
+## Adjacency matrix
 Calc adjacency matrix
 ```{r, eval=FALSE}
-cl <- calcAdjacency(cl, method = "wgcna", softPower = 5)
+cl <- calcAdjacency(cl, method = "wgcna", softPower = 6)
 ```
 
+## Topological overlap matrix
 Calculate topological overlap matrix (TOM)
 ```{r, eval=FALSE}
 cl <- calcTOM(cl)
 ```
+
+## Gene-wise clustering
 Cluster genes
 ```{r, eval=FALSE}
 cl <- calcTree(cl)
@@ -221,12 +181,163 @@ cl <- calcTree(cl)
 
 Plot clustering
 ```{r, eval=FALSE}
-plotTree(cl, pamStage=TRUE)
+plotModuleTree(cl, pamStage=TRUE)
 ```
+
+## Module eigengenes
 
 Plot the modules for groups
 ```{r, eval=FALSE}
+calcModuleEigengenes <- function(cl, deepSplit=2, minClusterSize=10, pamStage=TRUE, ...){
+
+        stopifnot("cl must be a coexList object" = class(cl)[1] == "coexList")
+    
+        tree <- dynamicTreeCut::cutreeHybrid(dendro = cl@geneTree,
+                             pamStage=pamStage,
+                             minClusterSize = minClusterSize,
+                             deepSplit = deepSplit,
+                             distM = cl@dissTOM)
+
+        
+        rowData(cl)$module <- modules
+        
+        modules <- WGCNA::labels2colors(tree$labels)
+
+        PCs <- WGCNA::moduleEigengenes(t(cl@normCounts), colors=modules, )
+        ME <- PCs$eigengenes
+        rownames(ME) <- rownames(colData(cl))
+        ME <- t(ME)
+        
+}
+
+pheatmap::pheatmap(mat = t(ME), annotation_col = as.data.frame(colData(cl)))
 
 ```
 
+
+---
+
+### Unused functions
+```{r, eval=FALSE}
+#' Plot dendrogram of samples from normalised data with colourbar
+#'
+#' @param cl An object of class coexList.
+#' @param plotColVar logical. Plot colorbar of colData variable defined in colVar.
+#' @param colVar Character or numeric that refers to a
+#' column name of colData(cl)
+#' @param corMethod Correlation method. See ?cor
+#' @param hclustMethod clustering method. See ?hclust
+#' @return ggplot object
+#' @export
+#'
+#' @examples
+#' ngenes <- 1000
+#' nsamples <- 16
+#' edat <- matrix(rpois(ngenes*nsamples, lambda=5), nrow=ngenes)
+#' rownames(edat) <- paste0("gene_", 1:ngenes)
+#' colnames(edat) <- paste0("sample", 1:nsamples)
+#' cl <- coexList(counts = edat)
+#' colData(cl) <- S4Vectors::DataFrame(row.names = colnames(edat),
+#' group = c(rep("A", 8), rep("B", 8)))
+#' cl <- normCounts(cl)
+#' plotSampleTree(cl, plotColVar=TRUE, colVar="group")
+
+plotSampleTree <- function(cl, plotColVar=FALSE, colVar=1, corMethod="spearman",
+                           hclustMethod="average"){
+
+    stopifnot("cl must be a coexList object" = class(cl)[1] == "coexList")
+    stopifnot("plotColVar must be logical of length 1" =
+                  class(plotColVar) == "logical" &
+                  length(plotColVar) == 1)
+
+    # Check colVar is valid
+    pass <- NULL
+
+    if( plotColVar == TRUE ){
+        pass <- (
+            is.numeric(colVar) &
+            length(colVar) == 1 &
+            colVar %in% 1:ncol(colData(cl))
+            ) | (
+                is.character(colVar) &
+                    length(colVar) == 1 &
+                    colVar %in% colnames(colData(cl))
+            )
+
+        stopifnot("colVar must be a numeric or character of length 1 that refers to a column of colData(cl)" =
+                      pass == TRUE)
+    }
+
+    # Do the clustering
+    cat("Calculating correlations...\n")
+    dissimilarity <- 1 - stats::cor(cl@normCounts, method = corMethod)
+    cat("Clustering...\n")
+    distance <- as.dist(dissimilarity)
+    hc <- hclust(distance, method = hclustMethod)
+    gg <- suppressMessages(
+        ggdendro::ggdendrogram(hc, rotate = FALSE) +
+            ggplot2::scale_y_continuous(expand = c(0,0)) +
+            ggplot2::theme(axis.text.y = ggplot2::element_blank(),
+                           plot.margin = ggplot2::unit(c(10,10,0,10), "points")) +
+            coord_cartesian(xlim = c(1, length(hc$labels)))
+
+    )
+
+    # Get the colData for colour bar
+
+    if( plotColVar == TRUE ){
+
+        x <- NULL
+        lab <- NULL
+
+        if (class(colVar) == "character"){
+            x <- match(colVar, colnames(colData(cl)))
+            lab <- colVar
+        } else {
+            x <- colVar
+            lab <- colnames(colData(cl))[colVar]
+        }
+
+        get_col_data <- function(x){
+
+            df <- data.frame(id = rownames(colData(cl)),
+                             variable = colnames(colData(cl))[x],
+                             value = colData(cl)[ ,x],
+                             order = hc$order)
+
+            # Set order of dendrogram
+            df$id <- factor(df$id, levels = hc$labels[hc$order])
+
+            return(df)
+        }
+
+        col_dat <- get_col_data(x)
+
+        # Plot the colour bar
+        gg2 <- ggplot2::ggplot(col_dat, aes(x = .data$id,
+                                            y = .data$variable,
+                                            fill=.data$value)) +
+            ggplot2::geom_tile() +
+            ggplot2::scale_x_discrete(expand = c(0,0)) +
+            coord_cartesian(xlim = c(1, length(hc$labels))) +
+            ggplot2::scale_y_discrete(expand=c(0,0)) +
+            ggplot2::xlab("") +
+            ggplot2::ylab("") +
+            #labs(fill=) +
+            ggplot2::theme(plot.margin = unit(c(0,10,10,10), "points"),
+                           axis.ticks = ggplot2::element_blank(),
+                           axis.text = ggplot2::element_blank(),
+                           legend.position="bottom")
+
+        # Assemble the plot
+        gg <- cowplot::plot_grid(gg, gg2, axis = "l", align = "v",
+                                 nrow = 2,
+                                 rel_heights = c(0.4, 0.2))
+
+    }
+
+    return(gg)
+}
+
+```
 

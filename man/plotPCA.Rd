@@ -4,17 +4,17 @@
 \alias{plotPCA}
 \title{Plot PCA of samples from normalised data}
 \usage{
-plotPCA(cl, groupVar = "", x_pc = 1, y_pc = 2, scale = TRUE)
+plotPCA(cl, colVar = "", x_pc = 1, y_pc = 2, scale = TRUE)
 }
 \arguments{
 \item{cl}{An object of class coexList.}
 
-\item{groupVar}{Character or numeric that refers to a
+\item{colVar}{Character or numeric that refers to a
 column name of colData(cl)}
 
-\item{x_pc}{numeric of length 1. What PC to plot on the x-axis}
+\item{x_pc}{numeric of length 1. The principal component to plot on the x-axis}
 
-\item{y_pc}{numeric of length 1. What PC to plot on the y-axis}
+\item{y_pc}{numeric of length 1. The principal component to plot on the y-axis}
 
 \item{scale}{logical. Should the data be scaled before
 calculating principal components? See ?prcomp for more details.
