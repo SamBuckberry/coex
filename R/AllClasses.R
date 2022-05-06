@@ -36,6 +36,8 @@
 #' @slot dissTOM Matrix. A topological overlap matrix generated
 #' with WGCNA::TOMsimilarity().
 #' @slot geneTree A S4 class hclust object as defined by tidycoex::hclust().
+#' @slot moduleEigengenes A list of module eigengenes data as returned from
+#' WGCNA::moduleEigengenes
 #'
 #' @export
 #' @import methods
@@ -53,6 +55,7 @@
                           networkType = "character",
                           adjacencyMat = "matrix",
                           dissTOM = "matrix",
-                          geneTree = "hclust"
+                          geneTree = "hclust",
+                          moduleEigengenes = "list"
                           ),
                       )
