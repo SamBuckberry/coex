@@ -1,29 +1,33 @@
-# coex: An R package for tidy co-expression analyses
+# coex: An R package for co-expression network analyses
 
 ---
+Correlation networks are have become a common way to analyse gene expression data. In this area,  weighted gene co-expression network analysis (WGCNA) is a popular method for analysing the correlation patterns among genes across samples.
 
-## How to install
+The `coex` R package is a collection of eassy to use R functions for performing co-expression analyses, primarily from RNA-seq data. The package includes functions for normalising RNA-seq count data for co-expression analyses, batch effect detection and correction, network construction, module detection, visualisation, among other features.
 
-GitHub
-```
+`coex` features include:  
+* Optimised wrappers for core `WGCNA` functions
+* Function for CTF normalisation as implimented in [Johnson & Krishnan 2022](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-021-02568-9)
+* Function for CLR adjacency calculations as implimented in [Johnson & Krishnan 2022](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-021-02568-9)
+* Fast clustering using the `fastcluster` package
+* ggplot objects output from most plotting functions
+
+## How to install the `coex` package
+
+
+### GitHub
+```{r}
 library(devtools)
 devtools::install_github()
 ```
 
-Bioconductor
-```
+## Testing the installation
+```{r}
 
 ```
 
-### To do
-- Add stopifnot and unit tests for plotPCA
-    - Check if plotPCA should be a generic like in DEseq2
 
-- Add spqn normalisation methods. See https://bioconductor.org/packages/release/bioc/vignettes/spqn/inst/doc/spqn.html
-
-- Add CPM/TPM normalisation methods
-
-### Notes
+### Notes and further reading
 
 [Measures such as Pearson correlation automatically include a standardization of gene expression across samples, which could explain why additional library size correction may not be needed. This implication is also supported by the Counts workflow outperforming within-sample normalization workflows](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-021-02568-9#Sec9) 
 
