@@ -3,8 +3,8 @@
 #' @param cl An object of class coexList.
 #' @param colVar Character or numeric that refers to a
 #' column name of colData(cl)
-#' @param x_pc numeric of length 1. What PC to plot on the x-axis
-#' @param y_pc numeric of length 1. What PC to plot on the y-axis
+#' @param x_pc numeric of length 1. The principal component to plot on the x-axis
+#' @param y_pc numeric of length 1. The principal component to plot on the y-axis
 #' @param scale logical. Should the data be scaled before
 #' calculating principal components? See ?prcomp for more details.
 #' A column name of colData(cl) for point colours.
@@ -22,6 +22,13 @@
 #'
 
 plotPCA <- function(cl, colVar="", x_pc=1, y_pc=2, scale=TRUE){
+
+    stopifnot("cl must be a coexList object" = class(cl)[1] == "coexList")
+    stopifnot("scale must be logical of length 1" = class(scale) == "logical")
+    stopifnot("x_p1 must be numeric of length 1" = class(x_pc) == "numeric" &
+                  length(x_pc) == 1)
+    stopifnot("y_pc must be numeric of length 1" = class(y_pc) == "numeric" &
+                  length(y_pc) == 1)
 
     # Remove incomplete cases
     mat <- cl@normCounts[stats::complete.cases(cl@normCounts), ]
@@ -46,7 +53,7 @@ plotPCA <- function(cl, colVar="", x_pc=1, y_pc=2, scale=TRUE){
 
     pca_df <- data.frame(PC1=pc1_dat, PC2=pc2_dat)
 
-    if (groupVar != ""){
+    if (colVar != ""){
         pca_df <- cbind(pca_df, colData(cl)[ ,colVar])
         colnames(pca_df)[4] <- "colVar"
     }
@@ -60,5 +67,6 @@ plotPCA <- function(cl, colVar="", x_pc=1, y_pc=2, scale=TRUE){
                            ggplot2::element_line(colour = 'grey')) +
         ggplot2::xlab(paste0("PC", x_pc, " (", pc2, "%)")) +
         ggplot2::ylab(paste0("PC", y_pc, " (", pc1, "%)"))
-    gg_pca
+
+    return(gg_pca)
 }
