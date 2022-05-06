@@ -16,36 +16,62 @@ The `coex` R package is a collection of eassy to use R functions for performing 
 ## How to install the `coex` R package
 
 
-### GitHub
+### GitHub installation
+First install the bioconductor dependencies
 ```{r}
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install(c("impute", "preprocessCore",
+    "GO.db", "AnnotationDbi", "edgeR", "SummarizedExperiment",
+    "minet")
+```
+
+Then use `devtools` to install `coex` 
+```{r}
+install.packages("devtools")
 library(devtools)
+
 devtools::install_github("SamBuckberry/coex")
 ```
 
 ## Testing the `coex` installation
-```{r}
 
-```
-
-## `coex` co-expression analysis in 10 lines of code
+Executing the following lines of code should return a `coexList` object.
 ```{r}
 library(coex)
-counts <- read.table()
-cl <- coexList(counts) # Read the count data into coexList 
-cl <- normCounts(cl, normMethod = "CPM") # Normalise the count data
-cl <- calcSoftPower(cl) # Caclulate power for WGCNA
-cl <- calcAdjacency(cl, method = "wgcna") # Adjacency matrix
-cl <- calcTOM(cl) # Topological overlap matrix
-cl <- calcTree(cl) # Dendrogram of TOM to identify modules
+edat <- matrix(rpois(5000 * 16, lambda=5), nrow=5000)
+coexList(counts = edat)
 ```
 
-## `coex` workflow can be piped together
+## A `coex` WGCNA analysis in 10 lines of code
+
+Analyses are based on using the `coexList` object. Most functions continually add data and results to the `coexList` object in succession throughout the analysis, as the below example demonstrates.
+
 ```{r}
-cl <- coexList(dat) %>% normCounts() %>%
-    calcSoftPower() %>% calcAdjacency() %>%
-    calcTOM() %>% calcTree() %>% plotModuleTree()
+counts <- matrix(rpois(1000 * 16, lambda=5), nrow=1000)
+cl <- coexList(counts) 
+cl <- normCounts(cl, normMethod = "CPM")
+cl <- calcSoftPower(cl)
+cl <- calcAdjacency(cl, method = "wgcna") 
+cl <- calcTOM(cl)
+cl <- calcTree(cl) 
+plotModuleTree(cl) 
+cl <- calcModuleEigengenes(cl, deepSplit=2) 
+heatmapModules(cl) 
+```
+
+## A `coex` workflow can be piped together
+
+As the `coexList` object is used for the input and output of most functions, they can be piped together in succession.
+```{r}
+counts <- matrix(rpois(1000 * 16, lambda=5), nrow=1000)
+
+cl <- coexList(counts) %>% normCounts() %>%
+    calcAdjacency(softPower=6) %>% calcTOM() %>% 
+    calcTree() %>% plotModuleTree()
     
-cl <- calcModuleEigengene() %>% plotModule()
+calcModuleEigengene(cl, deepSplit = 2) %>% heatmapModules()
 ```
 
 
