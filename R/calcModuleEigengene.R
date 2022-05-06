@@ -20,8 +20,10 @@
 #' cl <- coexList(counts = edat)
 #' cl <- normCounts(cl)
 #' cl <- calcAdjacency(cl, softPower=6)
-#' # To view adjacency matrix
-#' cl@adjacencyMat[1:6, 1:6]
+#' cl <- calcTOM(cl)
+#' cl <- calcTree(cl)
+#' cl <- calcModuleEigengenes(cl)
+#' str(cl@moduleEigengenes)
 
 calcModuleEigengenes <- function(cl, deepSplit=2, minClusterSize=10,
                                 pamStage=TRUE, ...){
@@ -50,5 +52,5 @@ calcModuleEigengenes <- function(cl, deepSplit=2, minClusterSize=10,
 
     cl@moduleEigengenes <- ME
 
-    return(ME)
+    return(cl)
 }
