@@ -2,7 +2,13 @@
 #' Plot a dendrogram with modules
 #'
 #' @param cl An object of class coexList.
-#' @param ... Parameters for fastcluster::hclust()
+#' @param deepSplits integer in the range 0 to 4.
+#' Provides a rough control over sensitivity to cluster splitting.
+#' The higher the value, the more and smaller clusters will be produced.
+#' See dynamicTreeCut::cutreeHybrid() for more information.
+#' @param cores integer 1-5. How many cores to use?
+#' Parameter passed to parallel::mclapply(mc.cores=cores)
+#' @param ... Parameters for dynamicTreeCut::cutreeHybrid()
 #' @return A plot to the display device
 #'
 #' @importFrom stats as.dist
@@ -18,24 +24,41 @@
 #' cl <- calcTOM(cl)
 #' cl <- calcTree(cl)
 #' plotModuleTree(cl)
-plotModuleTree <- function(cl, ...){
+plotModuleTree <- function(cl, deepSplits=c(0:4), cores=1, ...){
+
 
     stopifnot("cl must be a coexList object" = class(cl)[1] == "coexList")
 
-    # Seperate list objects
-    mColorh=NULL
+    cat(paste0("=== Running dynamicTreeCut::cutreeHybrid for deepSplits ",
+               min(deepSplits), "-", max(deepSplits), " ===\n"))
+    cat("...This might take a while...\n")
+    calc_start <- Sys.time()
 
-    for (ds in 0:4){
+    cut_tree <- function(x, ...){
         tree <- dynamicTreeCut::cutreeHybrid(dendro = cl@geneTree,
-                                             deepSplit = ds,
+                                             deepSplit = x,
                                              verbose = 0,
                                              distM = cl@dissTOM, ...)
 
-        mColorh <- cbind(mColorh, WGCNA::labels2colors(tree$labels))
+        mColor <- WGCNA::labels2colors(tree$labels)
+        return(mColor)
     }
 
+    mColorh <- parallel::mclapply(X = deepSplits, FUN = cut_tree,
+                                  mc.cores = cores, ...)
 
-    WGCNA::plotDendroAndColors(cl@geneTree, mColorh,
-                               paste("dpSplt =",0:4), main = "",
+    mColorh <- do.call(cbind, mColorh)
+
+    colnames(mColorh) <- paste("deepSpilt =",0:4)
+
+    cat("...Plotting dendrogram with deepSplit modules...\n")
+    WGCNA::plotDendroAndColors(dendro = cl@geneTree, colors = mColorh,
+                               groupLabels = colnames(mColorh),
+                               main = "cutreeHybrid",
                                dendroLabels=FALSE)
+
+    calc_end <- Sys.time() - calc_start
+    cat(paste0("Elapsed time: ",
+               round(as.numeric(calc_end), digits = 2),
+               " ", units(calc_end), "\n"))
 }
