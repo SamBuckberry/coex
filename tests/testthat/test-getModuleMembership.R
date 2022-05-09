@@ -1,4 +1,5 @@
 
+## Setup the toy data for testing
 ngenes <- 1000
 nsamples <- 16
 edat <- matrix(rpois(ngenes*nsamples, lambda=5), nrow=ngenes)
@@ -14,4 +15,5 @@ cl <- calcModuleMembership(cl)
 testthat::test_that("calcModuleMembership returns data.frame", {
   testthat::expect_true(is.data.frame(getModuleMembership(cl)))
 })
+
 
