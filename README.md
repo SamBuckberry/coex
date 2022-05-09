@@ -3,7 +3,7 @@
 Correlation networks are have become a common way to analyse gene expression data. The `coex` R package is a collection of eassy to use R functions for performing co-expression analyses, primarily from RNA-seq data. The package includes functions for normalising RNA-seq count data for co-expression analyses, batch effect detection and correction, network construction, module detection, visualisation, among other features.
 
 `coex` features include:  
-* S4 object designed for co-expression analyses that extends the [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) class.
+* The `coexList` object, which is an S4 class object designed for co-expression analyses and extends the [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) class.
 * Data filtering and normalisation functions for RNA-seq data
     * CTF normalisation as implimented in [Johnson & Krishnan 2022](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-021-02568-9)  
 * Optimised wrappers for core [WGCNA](https://cran.r-project.org/web/packages/WGCNA/index.html) functions  
@@ -50,13 +50,13 @@ Analyses are based on using the `coexList` object. Most functions continually ad
 counts <- matrix(rpois(1000 * 16, lambda=5), nrow=1000)
 cl <- coexList(counts) 
 cl <- normCounts(cl, normMethod = "CPM")
-cl <- calcSoftPower(cl)
 cl <- calcAdjacency(cl, method = "wgcna") 
 cl <- calcTOM(cl)
 cl <- calcTree(cl) 
 plotModuleTree(cl) 
 cl <- calcModuleEigengenes(cl, deepSplit=2) 
-heatmapModules(cl) 
+cl <- calcModuleMembership(cl)
+heatmapModules(cl)
 ```
 
 ## A `coex` workflow can be piped together
