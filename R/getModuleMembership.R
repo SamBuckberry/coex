@@ -1,9 +1,7 @@
 #' Get co-expression module membership data from coexList object
 #'
 #' @param cl An object of class coexList.
-#' @param ... Parameters for WGCNA::signedKME
-#' @return A coexList object. This function adds data to the 'moduleMembership'
-#' slot of a coexList object.
+#' @return data.frame
 #'
 #' @seealso \code{\link[WGCNA]{signedKME}}
 #' @export
