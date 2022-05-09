@@ -8,12 +8,9 @@ getModuleMembership(cl)
 }
 \arguments{
 \item{cl}{An object of class coexList.}
-
-\item{...}{Parameters for WGCNA::signedKME}
 }
 \value{
-A coexList object. This function adds data to the 'moduleMembership'
-slot of a coexList object.
+data.frame
 }
 \description{
 Get co-expression module membership data from coexList object
