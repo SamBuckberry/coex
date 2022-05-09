@@ -38,6 +38,8 @@
 #' @slot geneTree A S4 class hclust object as defined by tidycoex::hclust().
 #' @slot moduleEigengenes A list of module eigengenes data as returned from
 #' WGCNA::moduleEigengenes
+#' @slot moduleMembership A matrix of module membership values.
+#' Rows correspond to genes, and columns to modules.
 #'
 #' @export
 #' @import methods
@@ -56,6 +58,7 @@
                           adjacencyMat = "matrix",
                           dissTOM = "matrix",
                           geneTree = "hclust",
-                          moduleEigengenes = "list"
-                          ),
+                          moduleEigengenes = "list",
+                          moduleMembership = "data.frame"
+                          )
                       )
