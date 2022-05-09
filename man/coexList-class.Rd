@@ -42,5 +42,8 @@ with WGCNA::TOMsimilarity().}
 
 \item{\code{moduleEigengenes}}{A list of module eigengenes data as returned from
 WGCNA::moduleEigengenes}
+
+\item{\code{moduleMembership}}{A matrix of module membership values.
+Rows correspond to genes, and columns to modules.}
 }}
 

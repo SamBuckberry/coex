@@ -34,8 +34,8 @@ library(cowplot)
 
 ## Download RNA-seq counts data
 Load data from SRP041675 as a RangedSummarizedExperiment. This loads an object named `rse_gene`.
-```{r}
-file_url <- download_study('SRP041675', type = "rse-gene",
+```{r, eval=FALSE}
+file_url <- recount::download_study('SRP041675', type = "rse-gene",
                            download = FALSE)
 
 # Load the data
@@ -44,7 +44,7 @@ rse_gene
 ```
 
 
-```{r, eval=FALSE}
+```{r}
 load("~/Desktop/rse-gene.Rdata")
 ```
 
@@ -151,6 +151,7 @@ Calculate soft power thresholds for WGCNA network
 ```{r, eval=FALSE}
 cl <- calcSoftPower(cl)
 ```
+
 Check what the estimated power is
 ```{r, eval=FALSE}
 cl@powerEstimate
@@ -164,7 +165,7 @@ plotSoftPower(cl)
 ## Adjacency matrix
 Calc adjacency matrix
 ```{r, eval=FALSE}
-cl <- calcAdjacency(cl, method = "wgcna", softPower = 6)
+cl <- calcAdjacency(cl, method = "wgcna", softPower = 5)
 ```
 
 ## Topological overlap matrix
@@ -186,33 +187,17 @@ plotModuleTree(cl, pamStage=TRUE)
 
 ## Module eigengenes
 
-Plot the modules for groups
+Calculate module eigengenes for chosen tree split
 ```{r, eval=FALSE}
-calcModuleEigengenes <- function(cl, deepSplit=2, minClusterSize=10, pamStage=TRUE, ...){
-
-        stopifnot("cl must be a coexList object" = class(cl)[1] == "coexList")
-    
-        tree <- dynamicTreeCut::cutreeHybrid(dendro = cl@geneTree,
-                             pamStage=pamStage,
-                             minClusterSize = minClusterSize,
-                             deepSplit = deepSplit,
-                             distM = cl@dissTOM)
-
-        
-        rowData(cl)$module <- modules
-        
-        modules <- WGCNA::labels2colors(tree$labels)
-
-        PCs <- WGCNA::moduleEigengenes(t(cl@normCounts), colors=modules, )
-        ME <- PCs$eigengenes
-        rownames(ME) <- rownames(colData(cl))
-        ME <- t(ME)
-        
-}
-
-pheatmap::pheatmap(mat = t(ME), annotation_col = as.data.frame(colData(cl)))
-
+cl <- calcModuleEigengenes(cl, deepSplit = 3, minClusterSize = 30)
 ```
+
+Calculate module membership. 
+```{r, eval=FALSE}
+cl <- calcModuleMembership(cl)
+```
+
+
 
 
 ---

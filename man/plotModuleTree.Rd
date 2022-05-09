@@ -4,12 +4,20 @@
 \alias{plotModuleTree}
 \title{Plot a dendrogram with modules}
 \usage{
-plotModuleTree(cl, ...)
+plotModuleTree(cl, deepSplits = c(0:4), cores = 1, ...)
 }
 \arguments{
 \item{cl}{An object of class coexList.}
 
-\item{...}{Parameters for fastcluster::hclust()}
+\item{deepSplits}{integer in the range 0 to 4.
+Provides a rough control over sensitivity to cluster splitting.
+The higher the value, the more and smaller clusters will be produced.
+See dynamicTreeCut::cutreeHybrid() for more information.}
+
+\item{cores}{integer 1-5. How many cores to use?
+Parameter passed to parallel::mclapply(mc.cores=cores)}
+
+\item{...}{Parameters for dynamicTreeCut::cutreeHybrid()}
 }
 \value{
 A plot to the display device

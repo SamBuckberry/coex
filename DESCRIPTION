@@ -21,6 +21,7 @@ Imports:
     matrixStats,
     methods,
     minet,
+    parallel,
     rlang,
     stringr,
     SummarizedExperiment,

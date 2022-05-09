@@ -4,13 +4,7 @@
 \alias{calcModuleEigengenes}
 \title{Calculate an adjacency matrix}
 \usage{
-calcModuleEigengenes(
-  cl,
-  deepSplit = 2,
-  minClusterSize = 10,
-  pamStage = TRUE,
-  ...
-)
+calcModuleEigengenes(cl, deepSplit = 2, ...)
 }
 \arguments{
 \item{cl}{An object of class coexList.}
@@ -19,11 +13,6 @@ calcModuleEigengenes(
 Provides a rough control over sensitivity to cluster splitting.
 The higher the value, the more and smaller clusters will be produced.
 See ?dynamicTreeCut::cutreeHybrid for more details.}
-
-\item{minClusterSize}{Numeric. The minimum cluster size.
-See ?cutreeHybrid::dynamicTreeCut}
-
-\item{pamStage}{logical. Default is TRUE. See ?cutreeHybrid::dynamicTreeCut}
 
 \item{...}{Parameters for cutreeHybrid::dynamicTreeCut}
 }
