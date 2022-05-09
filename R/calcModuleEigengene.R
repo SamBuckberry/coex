@@ -5,9 +5,6 @@
 #' Provides a rough control over sensitivity to cluster splitting.
 #' The higher the value, the more and smaller clusters will be produced.
 #' See ?dynamicTreeCut::cutreeHybrid for more details.
-#' @param minClusterSize Numeric. The minimum cluster size.
-#' See ?cutreeHybrid::dynamicTreeCut
-#' @param pamStage logical. Default is TRUE. See ?cutreeHybrid::dynamicTreeCut
 #' @param ... Parameters for cutreeHybrid::dynamicTreeCut
 #' @return A coexList object.
 #'
@@ -25,32 +22,27 @@
 #' cl <- calcModuleEigengenes(cl)
 #' str(cl@moduleEigengenes)
 
-calcModuleEigengenes <- function(cl, deepSplit=2, minClusterSize=10,
-                                pamStage=TRUE, ...){
+calcModuleEigengenes <- function(cl, deepSplit=2, ...){
 
     stopifnot("cl must be a coexList object" = class(cl)[1] == "coexList")
     stopifnot("deepSplit must be integer between 0 and 4" =
                   is.numeric(deepSplit) & deepSplit < 5 & deepSplit > 0)
-    stopifnot("minClusterSize must be numeric > 1" =
-                  is.numeric(minClusterSize) & minClusterSize > 1)
-    stopifnot("pamStage must be logical of length 1" = is.logical(pamStage) &
-                  length(pamStage) == 1)
+    #stopifnot("minClusterSize must be numeric > 1" =
+    #              is.numeric(minClusterSize) & minClusterSize > 1)
+    #stopifnot("pamStage must be logical of length 1" = is.logical(pamStage) &
+    #              length(pamStage) == 1)
 
-    cat("Detecting clusters in dendrogram...")
+    cat("=== Running dynamicTreeCut::cutreeHybrid ===\n")
     tree <- dynamicTreeCut::cutreeHybrid(dendro = cl@geneTree,
-                                         pamStage = pamStage,
-                                         minClusterSize = minClusterSize,
                                          deepSplit = deepSplit,
                                          distM = cl@dissTOM, ...)
 
-    cat("Adding modules to rowData...")
     modules <- WGCNA::labels2colors(tree$labels)
-    rowData(cl)$module <- modules
+    #rowData(cl)$module <- modules
 
-    cat("Calculating module eigengenes...")
-    ME <- WGCNA::moduleEigengenes(t(cl@normCounts), colors=modules)
-
-    cl@moduleEigengenes <- ME
+    cat("=== Running WGCNA::moduleEigengenes ===\n")
+    cl@moduleEigengenes <- WGCNA::moduleEigengenes(t(cl@normCounts),
+                                                   colors=modules)
 
     return(cl)
 }
