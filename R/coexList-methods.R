@@ -1,4 +1,6 @@
 
+
+#'
 #' An S4 class object to represent the data used in a weighted-gene co-expression network analysis.
 #'
 #' @param counts A matrix of gene expression data.
@@ -53,3 +55,4 @@ setMethod("show", "CoexList", function(object) {
         sep=""
     )
 })
+
