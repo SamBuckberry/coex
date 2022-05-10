@@ -1,12 +1,12 @@
 
 #' Calculate an adjacency matrix
-#' @param cl An object of class coexList.
+#' @param cl An object of class CoexList.
 #' @param deepSplit integer in the range 0 to 4.
 #' Provides a rough control over sensitivity to cluster splitting.
 #' The higher the value, the more and smaller clusters will be produced.
 #' See ?dynamicTreeCut::cutreeHybrid for more details.
 #' @param ... Parameters for cutreeHybrid::dynamicTreeCut
-#' @return A coexList object.
+#' @return A CoexList object.
 #'
 #' @export
 #' @examples
@@ -14,7 +14,7 @@
 #' nsamples <- 16
 #' edat <- matrix(rpois(ngenes*nsamples, lambda=5), nrow=ngenes)
 #' rownames(edat) <- paste0("gene_", 1:ngenes)
-#' cl <- coexList(counts = edat)
+#' cl <- CoexList(counts = edat)
 #' cl <- normCounts(cl)
 #' cl <- calcAdjacency(cl, softPower=6)
 #' cl <- calcTOM(cl)
@@ -24,7 +24,7 @@
 
 calcModuleEigengenes <- function(cl, deepSplit=2, ...){
 
-    stopifnot("cl must be a coexList object" = class(cl)[1] == "coexList")
+    stopifnot("cl must be a CoexList object" = class(cl)[1] == "CoexList")
     stopifnot("deepSplit must be integer between 0 and 4" =
                   is.numeric(deepSplit) & deepSplit < 5 & deepSplit > 0)
     #stopifnot("minClusterSize must be numeric > 1" =

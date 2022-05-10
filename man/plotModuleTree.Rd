@@ -7,7 +7,7 @@
 plotModuleTree(cl, deepSplits = c(0:4), cores = 1, ...)
 }
 \arguments{
-\item{cl}{An object of class coexList.}
+\item{cl}{An object of class CoexList.}
 
 \item{deepSplits}{integer in the range 0 to 4.
 Provides a rough control over sensitivity to cluster splitting.
@@ -30,7 +30,7 @@ ngenes <- 1000
 nsamples <- 16
 edat <- matrix(rpois(ngenes*nsamples, lambda=5), nrow=ngenes)
 rownames(edat) <- paste0("gene_", 1:ngenes)
-cl <- coexList(counts = edat)
+cl <- CoexList(counts = edat)
 cl <- normCounts(cl)
 cl <- calcAdjacency(cl, softPower=6)
 cl <- calcTOM(cl)

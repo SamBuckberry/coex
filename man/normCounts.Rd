@@ -7,7 +7,7 @@
 normCounts(cl, normMethod = "CPM", scaleMethod = "log2", geneLength = NA)
 }
 \arguments{
-\item{cl}{An object of class coexList.}
+\item{cl}{An object of class CoexList.}
 
 \item{normMethod}{character. The within-sample normalisation method.
 One of "CTF", "CPM", "TPM"}
@@ -25,7 +25,7 @@ ngenes <- 1000
 nsamples <- 16
 edat <- matrix(rpois(ngenes*nsamples, lambda=5), nrow=ngenes)
 rownames(edat) <- paste0("gene_", 1:ngenes)
-cl <- coexList(counts = edat)
+cl <- CoexList(counts = edat)
 cl <- normCounts(cl)
 cl@normCounts[1:6, 1:6]
 cl@normMethod

@@ -7,7 +7,7 @@
 checkFilter(cl, propGenes = 1, ...)
 }
 \arguments{
-\item{cl}{An object of class coexList.}
+\item{cl}{An object of class CoexList.}
 
 \item{propGenes}{The proportion of genes to keep. Will rank and select genes
 with the highest variance.}
@@ -20,7 +20,7 @@ network construction.
 }
 \examples{
 \dontrun{
-cl <- coexList(d1)
+cl <- CoexList(d1)
 checkFilter(cl)
 }
 }

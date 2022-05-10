@@ -7,7 +7,7 @@
 plotSoftPower(cl, RsquaredCut = 0.85)
 }
 \arguments{
-\item{cl}{An object of class coexList.}
+\item{cl}{An object of class CoexList.}
 
 \item{RsquaredCut}{Desired minimum scale free topology fitting index R^2.}
 }
@@ -24,7 +24,7 @@ ngenes <- 1000
 nsamples <- 16
 edat <- matrix(rpois(ngenes*nsamples, lambda=5), nrow=ngenes)
 rownames(edat) <- paste0("gene_", 1:ngenes)
-cl <- coexList(counts = edat)
+cl <- CoexList(counts = edat)
 cl <- normCounts(cl)
 cl <- calcSoftPower(cl)
 plotSoftPower(cl)

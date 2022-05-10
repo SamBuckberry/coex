@@ -1,9 +1,9 @@
 
 #' Calculate an adjacency matrix
-#' @param cl An object of class coexList.
+#' @param cl An object of class CoexList.
 #' @param method Character. The method to construct matrix.
 #' Current options are 'wgcna', clr'. For 'wgcna', the function used is WGCNA::adjacency.
-#' For 'clr', the functio used is
+#' For 'clr', the function used is
 #' @param networkType character. The type of WGCNA network. Default is 'signed'.
 #' See ?WGCNA::adjacency for options.
 #' @param corFun character. The correlation method used.
@@ -11,7 +11,7 @@
 #' @param softPower Integer. The soft thresholding power used to construct the
 #' WGCNA network. This can be determined using the determineSoftPowerWGCNA function.
 #' @param ... Paramaters passed to adjacency function defined in method.
-#' @return A coexList object.
+#' @return A CoexList object.
 #'
 #' @description A wrapper function for constructing a co-expression matrix
 #' @export
@@ -20,7 +20,7 @@
 #' nsamples <- 16
 #' edat <- matrix(rpois(ngenes*nsamples, lambda=5), nrow=ngenes)
 #' rownames(edat) <- paste0("gene_", 1:ngenes)
-#' cl <- coexList(counts = edat)
+#' cl <- CoexList(counts = edat)
 #' cl <- normCounts(cl)
 #' cl <- calcAdjacency(cl, softPower=6)
 #' # To view adjacency matrix

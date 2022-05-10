@@ -1,6 +1,6 @@
 #' Normalise RNA-seq count data for co-expression analyses
 #'
-#' @param cl An object of class coexList.
+#' @param cl An object of class CoexList.
 #' @param normMethod character. The within-sample normalisation method.
 #' One of "CTF", "CPM", "TPM"
 #' @param scaleMethod character. One of "log2", "asinh",
@@ -13,7 +13,7 @@
 #' nsamples <- 16
 #' edat <- matrix(rpois(ngenes*nsamples, lambda=5), nrow=ngenes)
 #' rownames(edat) <- paste0("gene_", 1:ngenes)
-#' cl <- coexList(counts = edat)
+#' cl <- CoexList(counts = edat)
 #' cl <- normCounts(cl)
 #' cl@normCounts[1:6, 1:6]
 #' cl@normMethod
@@ -22,8 +22,8 @@
 normCounts <- function(cl, normMethod="CPM", scaleMethod="log2",
                        geneLength=NA){
 
-    # Check coexList object
-    stopifnot("cl must be a coexList object" = class(cl)[1] == "coexList")
+    # Check CoexList object
+    stopifnot("cl must be a CoexList object" = class(cl)[1] == "CoexList")
 
     # Check normalisation method is valid
     normMethod <- casefold(normMethod, upper = TRUE)
@@ -92,7 +92,7 @@ normCounts <- function(cl, normMethod="CPM", scaleMethod="log2",
     # Add normalised data to object
     cl@normCounts <- as.matrix(dat_norm)
 
-    # Add methods record to coexList object
+    # Add methods record to CoexList object
     cl@normMethod <- normMethod
     cl@scaleMethod <- scaleMethod
 

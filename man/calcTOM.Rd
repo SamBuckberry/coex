@@ -7,23 +7,23 @@
 calcTOM(cl, ...)
 }
 \arguments{
-\item{cl}{An object of class coexList.}
+\item{cl}{An object of class CoexList.}
 
 \item{...}{Parameters for WGCNA::TOMsimilarity()}
 }
 \value{
-A coexList object.
+A CoexList object.
 }
 \description{
 A wrapper function for running the WGCNA::TOMsimilarity function
-on a coexList object
+on a CoexList object
 }
 \examples{
 ngenes <- 1000
 nsamples <- 16
 edat <- matrix(rpois(ngenes*nsamples, lambda=5), nrow=ngenes)
 rownames(edat) <- paste0("gene_", 1:ngenes)
-cl <- coexList(counts = edat)
+cl <- CoexList(counts = edat)
 cl <- normCounts(cl)
 cl <- calcAdjacency(cl, softPower=6)
 cl <- calcTOM(cl)

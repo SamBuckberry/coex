@@ -4,7 +4,7 @@
 #' @description A function to identify samples and genes to be filtered for
 #' network construction.
 #'
-#' @param cl An object of class coexList.
+#' @param cl An object of class CoexList.
 #' @param propGenes The proportion of genes to keep. Will rank and select genes
 #' with the highest variance.
 #' @param ... Arguments passed to `WGCNA::goodSamplesGenes`
@@ -14,7 +14,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' cl <- coexList(d1)
+#' cl <- CoexList(d1)
 #' checkFilter(cl)
 #' }
 checkFilter <- function(cl, propGenes=1, ...){
@@ -40,17 +40,17 @@ checkFilter <- function(cl, propGenes=1, ...){
 
 }
 
-#' Filter genes and samples in coexList object for a given threshold
+#' Filter genes and samples in CoexList object for a given threshold
 #'
 #' @description A function to identify samples and genes to be filtered for network construction.
 #'
-#' @param cl An object of class coexList.
+#' @param cl An object of class CoexList.
 #' @param propGenes The proportion of genes to keep. Will rank and select genes with the highest variance.
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' cl <- coexList(d1)
+#' cl <- CoexList(d1)
 #' dim(cl@exprs)
 #' cl <- applyFilter(cl, propGenes=0.5)
 #' dim(cl@exprs)

@@ -1,7 +1,7 @@
 
 #' Plot a dendrogram with modules
 #'
-#' @param cl An object of class coexList.
+#' @param cl An object of class CoexList.
 #' @param deepSplits integer in the range 0 to 4.
 #' Provides a rough control over sensitivity to cluster splitting.
 #' The higher the value, the more and smaller clusters will be produced.
@@ -18,7 +18,7 @@
 #' nsamples <- 16
 #' edat <- matrix(rpois(ngenes*nsamples, lambda=5), nrow=ngenes)
 #' rownames(edat) <- paste0("gene_", 1:ngenes)
-#' cl <- coexList(counts = edat)
+#' cl <- CoexList(counts = edat)
 #' cl <- normCounts(cl)
 #' cl <- calcAdjacency(cl, softPower=6)
 #' cl <- calcTOM(cl)
@@ -27,7 +27,7 @@
 plotModuleTree <- function(cl, deepSplits=c(0:4), cores=1, ...){
 
 
-    stopifnot("cl must be a coexList object" = class(cl)[1] == "coexList")
+    stopifnot("cl must be a CoexList object" = class(cl)[1] == "CoexList")
 
     cat(paste0("=== Running dynamicTreeCut::cutreeHybrid for deepSplits ",
                min(deepSplits), "-", max(deepSplits), " ===\n"))
@@ -44,8 +44,10 @@ plotModuleTree <- function(cl, deepSplits=c(0:4), cores=1, ...){
         return(mColor)
     }
 
-    mColorh <- parallel::mclapply(X = deepSplits, FUN = cut_tree,
-                                  mc.cores = cores, ...)
+    #mColorh <- parallel::mclapply(X = deepSplits, FUN = cut_tree,
+    #                              mc.cores = cores, ...)
+
+    mColorh <- BiocParallel::bplapply(X = deepSplits, FUN = cut_tree, ...)
 
     mColorh <- do.call(cbind, mColorh)
 

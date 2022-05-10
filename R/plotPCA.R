@@ -1,6 +1,6 @@
 #' Plot PCA of samples from normalised data
 #'
-#' @param cl An object of class coexList.
+#' @param cl An object of class CoexList.
 #' @param colVar Character or numeric that refers to a
 #' column name of colData(cl)
 #' @param x_pc numeric of length 1. The principal component to plot on the x-axis
@@ -16,14 +16,14 @@
 #' nsamples <- 16
 #' edat <- matrix(rpois(ngenes*nsamples, lambda=5), nrow=ngenes)
 #' rownames(edat) <- paste0("gene_", 1:ngenes)
-#' cl <- coexList(counts = edat)
+#' cl <- CoexList(counts = edat)
 #' cl <- normCounts(cl)
 #' plotPCA(cl)
 #'
 
 plotPCA <- function(cl, colVar="", x_pc=1, y_pc=2, scale=TRUE){
 
-    stopifnot("cl must be a coexList object" = class(cl)[1] == "coexList")
+    stopifnot("cl must be a CoexList object" = class(cl)[1] == "CoexList")
     stopifnot("scale must be logical of length 1" = class(scale) == "logical")
     stopifnot("x_p1 must be numeric of length 1" = class(x_pc) == "numeric" &
                   length(x_pc) == 1)

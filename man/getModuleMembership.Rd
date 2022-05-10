@@ -2,25 +2,25 @@
 % Please edit documentation in R/getModuleMembership.R
 \name{getModuleMembership}
 \alias{getModuleMembership}
-\title{Get co-expression module membership data from coexList object}
+\title{Get co-expression module membership data from CoexList object}
 \usage{
 getModuleMembership(cl)
 }
 \arguments{
-\item{cl}{An object of class coexList.}
+\item{cl}{An object of class CoexList.}
 }
 \value{
 data.frame
 }
 \description{
-Get co-expression module membership data from coexList object
+Get co-expression module membership data from CoexList object
 }
 \examples{
 ngenes <- 1000
 nsamples <- 16
 edat <- matrix(rpois(ngenes*nsamples, lambda=5), nrow=ngenes)
 rownames(edat) <- paste0("gene_", 1:ngenes)
-cl <- coexList(counts = edat)
+cl <- CoexList(counts = edat)
 cl <- normCounts(cl)
 cl <- calcAdjacency(cl, softPower=6)
 cl <- calcTOM(cl)

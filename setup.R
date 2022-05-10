@@ -26,9 +26,10 @@ usethis::use_package("ggplot2")
 usethis::use_package("dynamicTreeCut")
 usethis::use_package("SummarizedExperiment")
 usethis::use_package("caret")
-usethis::use_package("parallel")
+usethis::use_package("BiocParallel")
 usethis::use_testthat()
 usethis::use_test("getModuleMembership")
+
 
 #usethis::use_vignette("my-vignette")
 

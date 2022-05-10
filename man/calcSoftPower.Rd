@@ -7,14 +7,14 @@
 calcSoftPower(cl, RsquaredCut = 0.85, ...)
 }
 \arguments{
-\item{cl}{A coexList class object.}
+\item{cl}{A CoexList class object.}
 
 \item{RsquaredCut}{Desired minimum scale free topology fitting index R^2.}
 
 \item{...}{Arguments passed to \code{WGCNA:::pickSoftThreshold()}}
 }
 \value{
-A coexList class object.
+A CoexList class object.
 }
 \description{
 The aim of this function is to help choose an appropriate
@@ -26,7 +26,7 @@ ngenes <- 1000
 nsamples <- 16
 edat <- matrix(rpois(ngenes*nsamples, lambda=5), nrow=ngenes)
 rownames(edat) <- paste0("gene_", 1:ngenes)
-cl <- coexList(counts = edat)
+cl <- CoexList(counts = edat)
 cl <- normCounts(cl)
 cl <- calcSoftPower(cl)
 cl@powerEstimate

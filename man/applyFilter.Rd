@@ -2,12 +2,12 @@
 % Please edit documentation in R/filter.R
 \name{applyFilter}
 \alias{applyFilter}
-\title{Filter genes and samples in coexList object for a given threshold}
+\title{Filter genes and samples in CoexList object for a given threshold}
 \usage{
 applyFilter(cl, propGenes = 1)
 }
 \arguments{
-\item{cl}{An object of class coexList.}
+\item{cl}{An object of class CoexList.}
 
 \item{propGenes}{The proportion of genes to keep. Will rank and select genes with the highest variance.}
 }
@@ -16,7 +16,7 @@ A function to identify samples and genes to be filtered for network construction
 }
 \examples{
 \dontrun{
-cl <- coexList(d1)
+cl <- CoexList(d1)
 dim(cl@exprs)
 cl <- applyFilter(cl, propGenes=0.5)
 dim(cl@exprs)

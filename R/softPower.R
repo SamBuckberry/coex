@@ -4,10 +4,10 @@
 #' soft-thresholding power for network construction. Use `plotSoftPower` to
 #' inspect results
 #'
-#' @param cl A coexList class object.
+#' @param cl A CoexList class object.
 #' @param RsquaredCut Desired minimum scale free topology fitting index R^2.
 #' @param ... Arguments passed to `WGCNA:::pickSoftThreshold()`
-#' @return A coexList class object.
+#' @return A CoexList class object.
 #'
 #' @import SummarizedExperiment
 #'
@@ -18,7 +18,7 @@
 #' nsamples <- 16
 #' edat <- matrix(rpois(ngenes*nsamples, lambda=5), nrow=ngenes)
 #' rownames(edat) <- paste0("gene_", 1:ngenes)
-#' cl <- coexList(counts = edat)
+#' cl <- CoexList(counts = edat)
 #' cl <- normCounts(cl)
 #' cl <- calcSoftPower(cl)
 #' cl@powerEstimate
@@ -34,7 +34,7 @@ calcSoftPower <- function(cl, RsquaredCut = 0.85, ...){
     options(stringsAsFactors = FALSE)
 
     # Check inputs
-    stopifnot("cl is not of class coexList" = class(cl) == "coexList")
+    stopifnot("cl is not of class CoexList" = class(cl) == "CoexList")
 
     # Set powers
     powers <- c(c(1:10), seq(from = 12, to=20, by=2))
@@ -61,7 +61,7 @@ calcSoftPower <- function(cl, RsquaredCut = 0.85, ...){
 #' This function returns two plots: 1) Scale free topology model fit,
 #' and 2) Mean connectivity against soft power thresholds.
 #'
-#' @param cl An object of class coexList.
+#' @param cl An object of class CoexList.
 #' @param RsquaredCut Desired minimum scale free topology fitting index R^2.
 #'
 #' @return A ggplot object.
@@ -72,7 +72,7 @@ calcSoftPower <- function(cl, RsquaredCut = 0.85, ...){
 #' nsamples <- 16
 #' edat <- matrix(rpois(ngenes*nsamples, lambda=5), nrow=ngenes)
 #' rownames(edat) <- paste0("gene_", 1:ngenes)
-#' cl <- coexList(counts = edat)
+#' cl <- CoexList(counts = edat)
 #' cl <- normCounts(cl)
 #' cl <- calcSoftPower(cl)
 #' plotSoftPower(cl)

@@ -7,13 +7,13 @@
 calcModuleMembership(cl, ...)
 }
 \arguments{
-\item{cl}{An object of class coexList.}
+\item{cl}{An object of class CoexList.}
 
 \item{...}{Parameters for WGCNA::signedKME}
 }
 \value{
-A coexList object. This function adds data to the 'moduleMembership'
-slot of a coexList object.
+A CoexList object. This function adds data to the 'moduleMembership'
+slot of a CoexList object.
 }
 \description{
 Calculate co-expression module membership
@@ -23,7 +23,7 @@ ngenes <- 1000
 nsamples <- 16
 edat <- matrix(rpois(ngenes*nsamples, lambda=5), nrow=ngenes)
 rownames(edat) <- paste0("gene_", 1:ngenes)
-cl <- coexList(counts = edat)
+cl <- CoexList(counts = edat)
 cl <- normCounts(cl)
 cl <- calcAdjacency(cl, softPower=6)
 cl <- calcTOM(cl)

@@ -48,16 +48,16 @@ rse_gene
 load("~/Desktop/rse-gene.Rdata")
 ```
 
-# Prepare the `coexList` object 
+# Prepare the `CoexList` object 
 
-## Load counts data into coexList
-Load the gene expression counts into a coexList object
+## Load counts data into CoexList
+Load the gene expression counts into a CoexList object
 ```{r}
-cl <- coexList(counts = assay(rse_gene))
+cl <- CoexList(counts = assay(rse_gene))
 ```
 
-### Load metadata into coexList 
-Add the gene and sample metadata to the coexList object
+### Load metadata into CoexList 
+Add the gene and sample metadata to the CoexList object
 ```{r}
 colData(cl) <- colData(rse_gene)
 rowData(cl) <- rowData(rse_gene)
@@ -206,7 +206,7 @@ cl <- calcModuleMembership(cl)
 ```{r, eval=FALSE}
 #' Plot dendrogram of samples from normalised data with colourbar
 #'
-#' @param cl An object of class coexList.
+#' @param cl An object of class CoexList.
 #' @param plotColVar logical. Plot colorbar of colData variable defined in colVar.
 #' @param colVar Character or numeric that refers to a
 #' column name of colData(cl)
@@ -221,7 +221,7 @@ cl <- calcModuleMembership(cl)
 #' edat <- matrix(rpois(ngenes*nsamples, lambda=5), nrow=ngenes)
 #' rownames(edat) <- paste0("gene_", 1:ngenes)
 #' colnames(edat) <- paste0("sample", 1:nsamples)
-#' cl <- coexList(counts = edat)
+#' cl <- CoexList(counts = edat)
 #' colData(cl) <- S4Vectors::DataFrame(row.names = colnames(edat),
 #' group = c(rep("A", 8), rep("B", 8)))
 #' cl <- normCounts(cl)
@@ -230,7 +230,7 @@ cl <- calcModuleMembership(cl)
 plotSampleTree <- function(cl, plotColVar=FALSE, colVar=1, corMethod="spearman",
                            hclustMethod="average"){
 
-    stopifnot("cl must be a coexList object" = class(cl)[1] == "coexList")
+    stopifnot("cl must be a CoexList object" = class(cl)[1] == "CoexList")
     stopifnot("plotColVar must be logical of length 1" =
                   class(plotColVar) == "logical" &
                   length(plotColVar) == 1)

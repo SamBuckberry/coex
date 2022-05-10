@@ -44,7 +44,7 @@
 #' @export
 #' @import methods
 #' @importClassesFrom SummarizedExperiment SummarizedExperiment
-.coexList <- setClass(Class = "coexList",
+.CoexList <- setClass(Class = "CoexList",
                       contains="SummarizedExperiment",
                       slots=representation(
                           normCounts = "matrix",

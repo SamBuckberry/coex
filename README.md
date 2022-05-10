@@ -1,13 +1,14 @@
 # coex: An R package for co-expression network analyses
 
-Correlation networks are have become a common way to analyse gene expression data. The `coex` R package is a collection of eassy to use R functions for performing co-expression analyses, primarily from RNA-seq data. The package includes functions for normalising RNA-seq count data for co-expression analyses, batch effect detection and correction, network construction, module detection, visualisation, among other features.
+Correlation networks are have become a common way to analyse gene expression data. The `coex` R package is a collection of easy to use R functions for performing co-expression analyses, primarily from RNA-seq data. The package includes functions for normalising RNA-seq count data for co-expression analyses, batch effect detection and correction, network construction, module detection, visualisation, among other features.
 
 `coex` features include:  
-* The `coexList` object, which is an S4 class object designed for co-expression analyses and extends the [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) class.
+* The `CoexList` object, which is an S4 class object designed for co-expression analyses and extends the [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) class.
+* Parallel computation using [BiocParallel](https://bioconductor.org/packages/3.16/bioc/html/BiocParallel.html)
 * Data filtering and normalisation functions for RNA-seq data
-    * CTF normalisation as implimented in [Johnson & Krishnan 2022](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-021-02568-9)  
+    * CTF normalisation as implemented in [Johnson & Krishnan 2022](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-021-02568-9)  
 * Optimised wrappers for core [WGCNA](https://cran.r-project.org/web/packages/WGCNA/index.html) functions  
-* Function for CLR adjacency calculations as implimented in [Johnson & Krishnan 2022](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-021-02568-9)  
+* Function for CLR adjacency calculations as implemented in [Johnson & Krishnan 2022](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-021-02568-9)  
 * Very fast clustering functions derived from the [fastcluster](https://cran.r-project.org/web/packages/fastcluster/index.html) package  
 * Plotting functions that output ``ggplot2`` objects
 
@@ -20,9 +21,9 @@ First install the bioconductor dependencies
 if (!require("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 
-BiocManager::install(c("impute", "preprocessCore",
-    "GO.db", "AnnotationDbi", "edgeR", "SummarizedExperiment",
-    "minet")
+BiocManager::install(c("AnnotationDbi", "GO.db", 
+    "impute", "preprocessCore", "edgeR",
+    "SummarizedExperiment", "minet"))
 ```
 
 Then use `devtools` to install `coex` 
@@ -35,20 +36,20 @@ devtools::install_github("SamBuckberry/coex")
 
 ## Testing the `coex` installation
 
-Executing the following lines of code should return a `coexList` object.
+Executing the following lines of code should return a `CoexList` object.
 ```{r}
 library(coex)
 edat <- matrix(rpois(5000 * 16, lambda=5), nrow=5000)
-coexList(counts = edat)
+CoexList(counts = edat)
 ```
 
 ## A `coex` WGCNA analysis in 10 lines of code
 
-Analyses are based on using the `coexList` object. Most functions continually add data and results to the `coexList` object in succession throughout the analysis, as the below example demonstrates.
+Analyses are based on using the `CoexList` object. Most functions continually add data and results to the `CoexList` object in succession throughout the analysis, as the below example demonstrates.
 
 ```{r}
 counts <- matrix(rpois(1000 * 16, lambda=5), nrow=1000)
-cl <- coexList(counts) 
+cl <- CoexList(counts) 
 cl <- normCounts(cl, normMethod = "CPM")
 cl <- calcAdjacency(cl, method = "wgcna") 
 cl <- calcTOM(cl)
@@ -61,11 +62,11 @@ heatmapModules(cl)
 
 ## A `coex` workflow can be piped together
 
-As the `coexList` object is used for the input and output of most functions, they can be piped together in succession.
+As the `CoexList` object is used for the input and output of most functions, they can be piped together in succession.
 ```{r}
 counts <- matrix(rpois(1000 * 16, lambda=5), nrow=1000)
 
-cl <- coexList(counts) %>% normCounts() %>%
+cl <- CoexList(counts) %>% normCounts() %>%
     calcAdjacency(softPower=6) %>% calcTOM() %>% 
     calcTree() %>% plotModuleTree()
     

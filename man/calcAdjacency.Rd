@@ -14,7 +14,7 @@ calcAdjacency(
 )
 }
 \arguments{
-\item{cl}{An object of class coexList.}
+\item{cl}{An object of class CoexList.}
 
 \item{method}{Character. The method to construct matrix.
 Current options are 'wgcna', clr'. For 'wgcna', the function used is WGCNA::adjacency.
@@ -32,7 +32,7 @@ Options are "pearson" or "spearman".}
 \item{...}{Paramaters passed to adjacency function defined in method.}
 }
 \value{
-A coexList object.
+A CoexList object.
 }
 \description{
 A wrapper function for constructing a co-expression matrix
@@ -42,7 +42,7 @@ ngenes <- 1000
 nsamples <- 16
 edat <- matrix(rpois(ngenes*nsamples, lambda=5), nrow=ngenes)
 rownames(edat) <- paste0("gene_", 1:ngenes)
-cl <- coexList(counts = edat)
+cl <- CoexList(counts = edat)
 cl <- normCounts(cl)
 cl <- calcAdjacency(cl, softPower=6)
 # To view adjacency matrix

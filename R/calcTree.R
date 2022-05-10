@@ -1,19 +1,19 @@
 
 #' Cluster topological overlap matrix using fastcluster::hclust
 #'
-#' @param cl An object of class coexList.
+#' @param cl An object of class CoexList.
 #' @param ... Parameters for fastcluster::hclust()
-#' @return A coexList object.
+#' @return A CoexList object.
 #'
-#' @description A fast wrapper function for running hclust on a coexList object
-#' on a coexList object
+#' @description A fast wrapper function for running hclust on a CoexList object
+#' on a CoexList object
 #' @export
 #' @examples
 #' ngenes <- 1000
 #' nsamples <- 16
 #' edat <- matrix(rpois(ngenes*nsamples, lambda=5), nrow=ngenes)
 #' rownames(edat) <- paste0("gene_", 1:ngenes)
-#' cl <- coexList(counts = edat)
+#' cl <- CoexList(counts = edat)
 #' cl <- normCounts(cl)
 #' cl <- calcAdjacency(cl, softPower=6)
 #' cl <- calcTOM(cl)

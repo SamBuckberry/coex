@@ -4,7 +4,7 @@
 #' @param counts A matrix of gene expression data.
 #' @param ... Parameters for SummarizedExperiment.
 #'
-#' @return A coexList class object.
+#' @return A CoexList class object.
 #'
 #' @export
 #' @importFrom SummarizedExperiment SummarizedExperiment
@@ -13,11 +13,11 @@
 #' nsamples <- 16
 #' edat <- matrix(rnorm(ngenes*nsamples,mean=5,sd=2),ngenes,nsamples)
 #' rownames(edat) <- 1:ngenes
-#' coexList(counts = edat)
+#' CoexList(counts = edat)
 #'
-coexList <- function(counts, ...){
+CoexList <- function(counts, ...){
     se <- SummarizedExperiment::SummarizedExperiment(list(assays=counts), ...)
-    cl <- .coexList(se)
+    cl <- .CoexList(se)
 
     # Set filtered to false for new data import
     cl@isFiltered <- FALSE
@@ -25,7 +25,7 @@ coexList <- function(counts, ...){
 }
 
 ## Defining the validity method
-S4Vectors::setValidity2("coexList", function(object){
+S4Vectors::setValidity2("CoexList", function(object){
     msg <- NULL
 
     if (assayNames(object)[1] != "assays") {
@@ -39,11 +39,11 @@ S4Vectors::setValidity2("coexList", function(object){
 
 ## Creating a SHOW method
 
-#' Show method for when calling a coexList object
-#' @param object A coexList object
+#' Show method for when calling a CoexList object
+#' @param object A CoexList object
 #' @export
 #' @importMethodsFrom SummarizedExperiment show
-setMethod("show", "coexList", function(object) {
+setMethod("show", "CoexList", function(object) {
     callNextMethod()
     cat(
         "Assay data has ", ncol(object), " columns\n",
