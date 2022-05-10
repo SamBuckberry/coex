@@ -18,7 +18,7 @@ calcAdjacency(
 
 \item{method}{Character. The method to construct matrix.
 Current options are 'wgcna', clr'. For 'wgcna', the function used is WGCNA::adjacency.
-For 'clr', the functio used is}
+For 'clr', the function used is}
 
 \item{softPower}{Integer. The soft thresholding power used to construct the
 WGCNA network. This can be determined using the determineSoftPowerWGCNA function.}
